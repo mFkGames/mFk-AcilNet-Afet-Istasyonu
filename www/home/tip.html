@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>mFk AcilNet - Çevrimdışı Klinik Tıp &amp; Acil İlk Yardım Kütüphanesi</title>
+<style>
+  :root {
+    --bg-base: #090d16;
+    --card-bg: #0f172a;
+    --border: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --danger: #e11d48;
+    --success: #10b981;
+    --radius: 6px;
+  }
+  [data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --card-bg: #ffffff;
+    --border: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-base);
+    padding-top: max(8px, env(safe-area-inset-top, 8px));
+    padding-bottom: max(30px, env(safe-area-inset-bottom, 30px));
+    padding-left: max(8px, env(safe-area-inset-left, 8px));
+    padding-right: max(8px, env(safe-area-inset-right, 8px));
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 10px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  .top-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+  }
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 11px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .article-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .article-card h2 {
+    font-size: 15px;
+    color: #38bdf8;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  .badge-danger { background: rgba(225,29,72,0.2); color: #f87171; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+  ul { padding-left: 20px; margin-bottom: 8px; }
+  li { margin-bottom: 5px; }
+  .alert-box {
+    background: rgba(225,29,72,0.1);
+    border: 1px solid var(--danger);
+    color: #fca5a5;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    margin: 8px 0;
+  }
+  .dose-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 11px;
+  }
+  .dose-table th, .dose-table td {
+    border: 1px solid var(--border);
+    padding: 6px 8px;
+    text-align: left;
+  }
+  .dose-table th { background: var(--bg-base); color: var(--accent); }
+  .search-input {
+    width: 100%;
+    height: 32px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-main);
+    margin-bottom: 10px;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--accent); }
+
+  @media (max-width: 640px) {
+    body { padding: 6px; }
+    .top-strip { flex-direction: column; align-items: stretch; gap: 4px; text-align: center; }
+    .btn-back { align-self: flex-start; }
+    .article-card { padding: 10px 12px; margin-bottom: 8px; }
+    .article-card h2 { font-size: 13.5px; }
+    .dose-table th, .dose-table td { padding: 5px 6px; font-size: 10.5px; white-space: nowrap; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-strip">
+    <a href="index.html" class="btn-back">&larr; Geri</a>
+    <span style="font-weight:700; font-size:12px;">WikiMed Türkçe &bull; Çevrimdışı Klinik Tıp ve Acil Müdahale</span>
+    <span style="font-size:10px; color:var(--success);">● 2.800+ Klinik Başlık Hazır</span>
+  </div>
+
+  <input type="text" class="search-input" id="search-bar" placeholder="Tıbbi konu, semptom veya ilaç ara (kanama, turnike, kırık, yanık, CPR, zehirlenme)...">
+
+  <!-- 1. KANAMA VE TURNİKE -->
+  <div class="article-card" data-kw="kanama turnike damar bası sargı tampon">
+    <h2>
+      <span>1. Ağır Dış Kanamalar ve Turnike Protokolü (CAT)</span>
+      <span class="badge-danger">HAYATİ</span>
+    </h2>
+    <p>Atardamar kanamaları (fışkırır tarzda açık kırmızı kan) dakikalar içinde ölümcül şoka neden olur. Şebeke ve ambulans erişimi yoksa derhal aşağıdaki adımlar uygulanmalıdır:</p>
+    <ul>
+      <li><b>Doğrudan Bası:</b> Temiz bir bez veya gazlı bezle yara üzerine avuç içiyle tüm gücünüzle en az 5-10 dakika kesintisiz bastırınız.</li>
+      <li><b>Turnike Uygulama Şartları:</b> Yalnızca uzuvlardaki (kol veya bacak) doğrudan basıyla durdurulamayan şiddetli arter kanamalarında veya uzuv kopmalarında uygulanır. Boyun, göğüs veya karına turnike uygulanmaz!</li>
+      <li><b>Konum:</b> Yaranın 5-7 cm yukarısına (kalbe yakın taraf) kemik üzerine uygulanır. Kesinlikle eklem (dirsek, diz) üzerine uygulanmaz.</li>
+      <li><b>Sıkma:</b> Kanama tamamen durana ve uzuvdaki nabız kaybolana kadar sıkılır.</li>
+      <li><b>Zaman Damgası:</b> Turnike uygulanan kişinin alnına veya turnike bandına uygulandığı <b>saat ve dakika (örn: T 14:35)</b> silinmez bir kalemle yazılır.</li>
+      <li><b>Süre Sınırı:</b> Turnike 2 saatten uzun süre çözülmeden bırakılırsa kangren riski doğar; ancak kontrolsüz gevşetme ölümcül kan kaybına yol açabilir.</li>
+    </ul>
+    <div class="alert-box">Turnikeyi kesinlikle tel, misina veya ince iple yapmayınız; dokuyu keser. En az 5 cm genişliğinde kemer, bez veya üçgen sargı kullanınız.</div>
+  </div>
+
+  <!-- 2. KIRIK VE ATELLEME -->
+  <div class="article-card" data-kw="kırık çıkık burkulma atel sabitleme kemik travma">
+    <h2>2. Kırık, Çıkık ve Burkulmalarda Saha Atellemesi</h2>
+    <ul>
+      <li><b>Altın Kural:</b> Kırık kemiği asla yerine oturtmaya veya düzeltmeye çalışmayınız. Kemiği bulduğunuz pozisyonda sabitleyiniz.</li>
+      <li><b>İki Eklem Kuralı:</b> Atel (sert tahta, kalın karton veya metal), kırık bölgesinin hem bir üstündeki hem de bir altındaki eklemi içine alacak uzunlukta olmalıdır.</li>
+      <li><b>Açık Kırık (Kemik dışarıda):</b> Kemiği içeri itmeyiniz! Üzerini temiz nemli bir bezle örtüp etrafını destekleyerek sabitleyiniz.</li>
+      <li><b>Dolaşım Kontrolü:</b> Atelledikten sonra el veya ayak parmaklarını kontrol ediniz; soğuma, morarma veya nabızsızlık varsa ateli çok hafif gevşetiniz.</li>
+    </ul>
+  </div>
+
+  <!-- 3. CPR VE KALP MASAJI -->
+  <div class="article-card" data-kw="cpr kalp masajı suni solunum soluk bayılma nabız">
+    <h2>
+      <span>3. Kalp Masajı (CPR) ve Suni Solunum (Yetişkin &amp; Çocuk)</span>
+      <span class="badge-danger">ACİL</span>
+    </h2>
+    <ul>
+      <li><b>Bilinç ve Solunum Kontrolü:</b> Omuzlardan sarsıp "İyi misiniz?" diye sorunuz. Göğüs hareketlerini 10 saniye "Bak-Dinle-Hisset" yöntemiyle izleyiniz. Normal solunum yoksa derhal CPR'a başlayınız.</li>
+      <li><b>El Pozisyonu:</b> Göğüs kemiğinin (iman tahtası) alt yarısına iki elinizi üst üste kenetleyerek yerleştiriniz. Kollar dik tutulmalıdır.</li>
+      <li><b>Masaj Hızı &amp; Derinliği:</b> Dakikada <b>100 - 120 bası</b> temposunda (Bee Gees - Stayin' Alive şarkısı ritmi), göğsü <b>5 - 6 cm</b> çökertecek şekilde bastırınız.</li>
+      <li><b>Döngü:</b> 30 Kalp Masajı &rarr; 2 Suni Solunum. Maske veya hijyen engeli varsa yalnızca kesintisiz göğüs masajına devam ediniz.</li>
+      <li><b>Bebeklerde CPR:</b> İki parmakla göğüs kemiğine 4 cm derinlikte, dakikada 100-120 bası uygulanır.</li>
+    </ul>
+  </div>
+
+  <!-- 4. SOLUNUM YOLU TIKANMASI -->
+  <div class="article-card" data-kw="heimlich boğulma soluk tıkanma nefes">
+    <h2>4. Tam Tıkanma ve Heimlich Manevrası</h2>
+    <ul>
+      <li>Kişi ellerini boğazına götürüyor, konuşamıyor ve öksüremiyorsa tam tıkanma vardır.</li>
+      <li><b>Uygulama:</b> Kazazedenin arkasına geçiniz. Bir elinizi yumruk yapıp başparmak tarafını göbeğin hemen üstüne, göğüs kemiğinin altına yerleştiriniz. Diğer elinizle yumruğu kavrayıp arkaya ve yukarı doğru hızlıca bastırınız. Cisim çıkana kadar 5'erli tekrarlayınız.</li>
+      <li><b>Bebeklerde:</b> Bebeği kolunuzun üzerine yüzüstü yatırıp iki kürek kemiği arasına el ayasıyla 5 kez süpürür tarzda vurunuz.</li>
+    </ul>
+  </div>
+
+  <!-- 5. YANIKLAR -->
+  <div class="article-card" data-kw="yanık haşlanma alev sıcak su kimyasal">
+    <h2>5. Yanık ve Haşlanmalarda Acil Müdahale</h2>
+    <ul>
+      <li><b>Soğutma:</b> Yanık bölgesini derhal temiz, oda sıcaklığında veya hafif soğuk akan suyun altında <b>en az 15-20 dakika</b> tutunuz. Kesinlikle buz uygulamayınız (doku hasarını artırır).</li>
+      <li><b>Yasaklar:</b> Yanık üzerine asla diş macunu, salça, yoğurt veya yağ sürmeyiniz. Oluşan su kabarcıklarını (bül) kesinlikle patlatmayınız.</li>
+      <li><b>Örtme:</b> Yanık bölgesini temiz, steril nemli bir bez veya yanık örtüsüyle gevşekçe kapatınız.</li>
+      <li><b>Kimyasal Yanık:</b> Kuru kimyasalı önce fırçalayarak uzaklaştırınız, ardından en az 30 dakika bol suyla yıkayınız.</li>
+    </ul>
+  </div>
+
+  <!-- 6. ACİL İLAÇ VE DOZAJ TABLOSU -->
+  <div class="article-card" data-kw="ilaç dozaj parasetamol antibiyotik aspirin ağrı kesici">
+    <h2>6. Temel Çevrimdışı İlaç Rehberi &amp; Dozaj Parametreleri</h2>
+    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:8px;"><table class="dose-table">
+      <thead>
+        <tr>
+          <th>Etken Madde</th>
+          <th>Kullanım Amacı</th>
+          <th>Yetişkin Dozu</th>
+          <th>Çocuk Dozu / Not</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Parasetamol</b></td>
+          <td>Ateş ve hafif/orta ağrı</td>
+          <td>500 - 1000 mg (4-6 saatte bir, maks 4g/gün)</td>
+          <td>10-15 mg/kg (4-6 saatte bir). Karaciğer yetmezliğinde kontrendike.</td>
+        </tr>
+        <tr>
+          <td><b>İbuprofen</b></td>
+          <td>İltihap, kas/eklem ağrısı</td>
+          <td>400 mg (8 saatte bir, yemekle)</td>
+          <td>Mide kanaması ve ülserde verilmez. Bol suyla alınır.</td>
+        </tr>
+        <tr>
+          <td><b>Amoksisilin</b></td>
+          <td>Bakteriyel enfeksiyonlar</td>
+          <td>500 mg - 1000 mg (8-12 saatte bir)</td>
+          <td>Penisilin alerjisi olanlara kesinlikle verilmez!</td>
+        </tr>
+        <tr>
+          <td><b>Asetilsalisilik Asit (Aspirin)</b></td>
+          <td>Kalp krizi şüphesi</td>
+          <td>300 mg çiğnetilir (derhal)</td>
+          <td>İç kanama şüphesinde ve çocuklarda (Reye sendromu) verilmez.</td>
+        </tr>
+        <tr>
+          <td><b>Aktif Kömür</b></td>
+          <td>Ağızdan zehirlenmeler</td>
+          <td>50 - 100 g suda süspansiyon</td>
+          <td>Asit veya petrol türevi içilmişse verilmez (kusma tetiklenmez).</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<script>
+document.getElementById("search-bar").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase().trim();
+  document.querySelectorAll(".article-card").forEach(c => {
+    const kw = (c.getAttribute("data-kw") + " " + c.innerText).toLowerCase();
+    c.style.display = (!q || kw.includes(q)) ? "block" : "none";
+  });
+});
+const currentTheme = localStorage.getItem('mfk_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+</script>
+</body>
+</html>

@@ -27,6 +27,10 @@ set_var(){
 
 # ---------------------------------------------------------------- 0. kontroller
 say "Kontroller / checks"
+# Cihaz uygun mu? (işletim sistemi, RAM, alan, Wi-Fi AP desteği). Hata varsa kurulum durur.
+if ! "$REPO/scripts/preflight.sh"; then
+  die "Cihaz kurulum için uygun değil / device not suitable. Yukarıdaki [HATA] satırlarına bak / see [FAIL] lines above."
+fi
 if ! mountpoint -q /library; then
   echo "Uyarı: /library ayrı bir diske bağlı değil. İçerikler SD karta yazılır."
   echo "Warning: /library is not on a separate disk. Content will go to the SD card."
@@ -51,10 +55,10 @@ else
   while read -r line; do
     case "$line" in ''|\#*) continue;; esac
     set_var "${line%%:*}" "$(echo "${line#*:}" | sed 's/^ *//')"
-  done < "$REPO/config/iiab-overrides.yml"
+  done < <(tr -d '\r' < "$REPO/config/iiab-overrides.yml")
 
-  read -rp "Wi-Fi ağ adı / network name [HAS_PrepperDisk]: " SSID
-  SSID="${SSID:-HAS_PrepperDisk}"
+  read -rp "Wi-Fi ağ adı / network name [mFk-AcilNet]: " SSID
+  SSID="${SSID:-mFk-AcilNet}"
   while :; do
     read -rsp "Wi-Fi şifresi / password (en az 8 karakter / min 8 chars): " PASS; echo
     [ "${#PASS}" -ge 8 ] && break
@@ -70,7 +74,10 @@ else
   if command -v iiab >/dev/null; then
     iiab
   else
-    curl -fsSL d.iiab.io/install.txt | bash
+    tmp_installer=$(mktemp /tmp/iiab-install-XXXXXX.sh)
+    curl -fsSL d.iiab.io/install.txt -o "$tmp_installer" || die "IIAB kurulum betiği indirilemedi"
+    bash "$tmp_installer"
+    rm -f "$tmp_installer"
   fi
   [ -f /etc/iiab/install-flags/iiab-complete ] || die "Kurulum bitmedi / install not finished. Tekrar çalıştır / run again: sudo ./install.sh"
 fi

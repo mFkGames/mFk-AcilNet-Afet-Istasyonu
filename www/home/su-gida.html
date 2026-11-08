@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>mFk AcilNet - Su Arıtma, Gıda Güvenliği &amp; Kurtarma Düğümleri</title>
+<style>
+  :root {
+    --bg-base: #090d16;
+    --card-bg: #0f172a;
+    --border: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --radius: 6px;
+  }
+  [data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --card-bg: #ffffff;
+    --border: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-base);
+    padding-top: max(8px, env(safe-area-inset-top, 8px));
+    padding-bottom: max(30px, env(safe-area-inset-bottom, 30px));
+    padding-left: max(8px, env(safe-area-inset-left, 8px));
+    padding-right: max(8px, env(safe-area-inset-right, 8px));
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 10px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  .top-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+  }
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 11px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .section-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .section-card h2 {
+    font-size: 15px;
+    color: #38bdf8;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  ul { padding-left: 20px; margin-bottom: 8px; }
+  li { margin-bottom: 5px; }
+  .box-tip {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12px;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 6px; }
+    .top-strip { flex-direction: column; align-items: stretch; gap: 4px; text-align: center; }
+    .btn-back { align-self: flex-start; }
+    .section-card { padding: 10px 12px; margin-bottom: 8px; }
+    .section-card h2 { font-size: 13.5px; }
+    .box-tip { font-size: 11px; padding: 6px 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-strip">
+    <a href="index.html" class="btn-back">&larr; Geri</a>
+    <span style="font-weight:700; font-size:12px;">Afet Koşullarında Su, Gıda ve Kurtarma Kılavuzu</span>
+    <span style="font-size:10px; color:#10b981;">● Çevrimdışı Rehber</span>
+  </div>
+
+  <!-- SU ARITMA -->
+  <div class="section-card" id="su">
+    <h2>1. Doğal ve Şebekesiz Su Kaynaklarını Arıtma Protokolü</h2>
+    <p>Deprem sonrası ana şebeke suları lağım veya kimyasallarla kontamine olabilir. Kaynağı bilinmeyen sular arıtılmadan asla tüketilmemelidir.</p>
+    <ul>
+      <li><b>Kaba Filtreleme (Tortu Tasfiyesi):</b> Bulanık suyu önce temiz bir pamuklu kumaş veya tülbentten süzünüz. Varsa üstten alta doğru ince kum, mangal kömürü, kalın kum ve çakıl katmanlarından oluşan yerçekimi filtresinden geçiriniz.</li>
+      <li><b>Kaynatma Metodu:</b> Suyu fokurdayacak şekilde <b>en az 1 dakika</b> kaynatınız. Rakımı 2000 metreden yüksek dağlık alanlarda süreyi <b>3 dakikaya</b> çıkarınız.</li>
+      <li><b>Çamaşır Suyu (Sodyum Hipoklorit) Dozajı:</b> Yalnızca kokusuz ve katkısız (%5-6 sodyum hipoklorit içeren) çamaşır suyu kullanınız:
+        <ul>
+          <li><b>1 Litre Berrak Su için:</b> 2 damla çamaşır suyu damlatıp çalkalayınız, <b>en az 30 dakika</b> bekleyiniz.</li>
+          <li><b>1 Litre Bulanık veya Soğuk Su için:</b> 4 damla damlatıp en az 45 dakika bekleyiniz.</li>
+          <li>30 dakika sonra hafif klor kokusu alınmalıdır; koku yoksa dozu tekrarlayıp 15 dakika daha bekleyiniz.</li>
+        </ul>
+      </li>
+      <li><b>SODIS (Güneşle UV Dezenfeksiyonu):</b> Şeffaf PET su şişelerine doldurulan berrak sular, güneş alan metal veya çatı üzerine yatay konularak 6 saat (bulutlu havada 2 gün) bekletildiğinde UV-A ışınları bakterileri yok eder.</li>
+    </ul>
+    <div class="box-tip"><b>Hayati Uyarı:</b> Klorlama ve kaynatma mikropları öldürür fakat sudaki ağır metalleri, cıvayı, benzini ve tarım zehirlerini temizlemez! Sanayi ve tarım alanlarındaki sulardan uzak durunuz.</div>
+  </div>
+
+  <!-- GIDA SAKLAMA -->
+  <div class="section-card" id="gida">
+    <h2>2. Elektriksiz Gıda Güvenliği ve Erzak Muhafazası</h2>
+    <ul>
+      <li><b>Buzdolabı Kuralı:</b> Elektrik kesildiğinde buzdolabının kapağını açmayınız. Kapak kapalı kaldığı sürece buzdolabı 4 saat, tam dolu bir derin dondurucu 48 saat soğukluğunu korur.</li>
+      <li><b>Konserve Güvenliği ve Botulizm:</b> Kapağı şişmiş (bombe yapmış), paslanmış, delinmiş veya açıldığında fışkıran konserveleri kesinlikle tatmayınız bile! <i>Clostridium botulinum</i> toksini mikrogram seviyesinde ölümcüldür.</li>
+      <li><b>Kuru Bakliyat Saklama:</b> Pirinç, mercimek, fasulye ve unu güneş görmeyen serin yerde, hava almayan cam veya PET kaplarda içine 1-2 defne yaprağı ve kaya tuzu ekleyerek böceklenmeye karşı yıllarca koruyabilirsiniz.</li>
+      <li><b>Et ve Protein Koruma:</b> Elektrik yoksa çiğ etleri derhal ince şeritler halinde kesip bol kaya tuzuyla kurutunuz (pastırma/biltong yöntemi) veya kavurma yaparak kendi yağında hava almayacak şekilde dondurunuz.</li>
+    </ul>
+  </div>
+
+  <!-- DÜĞÜMLER -->
+  <div class="section-card" id="dugum">
+    <h2>3. Arama-Kurtarma ve Sabitleme Düğümleri Kılavuzu</h2>
+    <ul>
+      <li><b>Sekizli Düğümü (Figure-Eight):</b> İpin ucunun makaradan veya delikten kaçmasını engeller; kurtarma iplerinin ana güvenlik ve kasa düğümüdür. Yük bindiğinde dahi kolayca çözülebilir.</li>
+      <li><b>Kazık Bağı (Clove Hitch):</b> İpi bir ağaca, direğe veya boruya hızlıca sabitlemek için kullanılır. Çadır germe ve branda sabitlemede temel düğümdür.</li>
+      <li><b>Camadan Bağı (Reef Knot):</b> Aynı kalınlıktaki iki ipi birbirine eklemek veya sargı bezini bağlamak için kullanılır. Ağır yük taşımada çözülebileceğinden can güvenliği için kullanılmaz.</li>
+      <li><b>Balıkçı Bağı:</b> Islak, kaygan veya farklı kalınlıktaki iki ipi emniyetli şekilde birbirine bağlamak için kullanılır.</li>
+      <li><b>İspanyolet / Gerdirme Bağı (Taut-Line):</b> Çadır ve barınak iplerinin gerginliğini istendiğinde ileri-geri kaydırarak ayarlayan sürtünmeli düğümdür.</li>
+    </ul>
+  </div>
+</div>
+<script>
+const currentTheme = localStorage.getItem('mfk_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+</script>
+</body>
+</html>

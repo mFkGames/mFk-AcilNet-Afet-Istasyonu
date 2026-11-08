@@ -38,11 +38,12 @@ while read -r folder prefix _; do
 
   url=""; size=""
   if [ -n "$CAT" ]; then
-    # Katalog satırı / catalog line:  href="https://.../zim/<folder>/<prefix>_YYYY-MM.zim.meta4" ... length="<bytes>"
-    entry=$(grep -oE "href=\"https://[^\"]*/${prefix}_[0-9]{4}-[0-9]{2}[a-z]?\.zim\.meta4\"[^>]*length=\"[0-9]+\"" "$CAT" | sort -u | tail -1)
+    # Katalog satırı / catalog line: <link ... href="https://.../<prefix>_YYYY-MM.zim.meta4" ... length="<bytes>" />
+    # XML içinde attribute sırasından bağımsız olarak eşleştir
+    entry=$(grep -oE '<link [^>]*href="https://[^"]*/'${prefix}'_[0-9]{4}-[0-9]{2}[a-z]?\.zim\.meta4"[^>]*>' "$CAT" | sort -u | tail -1)
     if [ -n "$entry" ]; then
-      url=$(sed -E 's/^href="([^"]*)\.meta4".*/\1/' <<<"$entry")
-      size=$(sed -E 's/.*length="([0-9]+)".*/\1/' <<<"$entry")
+      url=$(grep -oE 'href="https://[^"]+\.meta4"' <<<"$entry" | sed -E 's/href="([^"]*)\.meta4"/\1/' | tail -1)
+      size=$(grep -oE 'length="[0-9]+"' <<<"$entry" | tr -dc '0-9' | tail -1)
       case "$url" in */zim/"$folder"/*) ;; *) echo "   not / note: $prefix katalogda '$folder' klasöründe değil / is not under '$folder' in the catalog ($url)";; esac
     fi
   else
@@ -90,7 +91,7 @@ while read -r folder prefix _; do
   for old in "$DEST/${prefix}"_[0-9][0-9][0-9][0-9]-[0-9][0-9]*.zim; do
     [ "$old" != "$DEST/$latest" ] && [ -f "$old" ] && { echo "-- eski sürüm siliniyor / removing $old"; rm -f "$old"; }
   done
-done < "$CONF"
+done < <(tr -d '\r' < "$CONF")
 
 echo ">> Kiwix kütüphanesi güncelleniyor / rebuilding Kiwix library"
 if command -v iiab-make-kiwix-lib >/dev/null; then

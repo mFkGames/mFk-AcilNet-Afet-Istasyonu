@@ -1,129 +1,303 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HAS_PrepperDisk :: Acil Durum</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>mFk AcilNet - Acil Durum &amp; Afet Müdahale Protokolü</title>
 <style>
-  body{margin:0;background:#E5E5E5;color:#000;font-family:Verdana,Tahoma,Arial,sans-serif;font-size:12px}
-  a{color:#006699;text-decoration:none}
-  a:hover{color:#DD6900;text-decoration:underline}
-  .wrap{max-width:980px;margin:0 auto;padding:10px}
-  .bodyline{background:#fff;border:1px solid #98AAB1;padding:8px}
-  .logo{font-family:"Trebuchet MS",Verdana,sans-serif;font-size:26px;font-weight:bold;color:#006699;letter-spacing:-1px;
-    text-shadow:1px 1px 0 #C7D0D7;padding:4px}
-  .logo span{color:#DD6900}
-  .crumb{font-weight:bold;font-size:12px;margin:8px 2px}
-  table.forumline{width:100%;border-collapse:collapse;border:1px solid #006699;background:#fff;margin-bottom:10px}
-  .forumline td{padding:6px 8px;border:1px solid #fff}
-  td.cat{background:linear-gradient(#EEF2F5,#C7D0D7);height:22px;font-weight:bold;font-size:13px;letter-spacing:1px}
-  td.row1{background:#EFEFEF;line-height:1.6}
-  td.row1 ul{margin:0;padding-left:20px}
-  td.src{background:#DEE3E7;font-size:10px;color:#444}
-  .alarm td{background:#B00000;color:#fff;font-size:14px;font-weight:bold;text-align:center;padding:10px}
-  .toc{margin:0 2px 10px;line-height:1.8}
-  .copy{text-align:center;font-size:10px;color:#444;margin:12px 0 4px;line-height:1.6}
-  @media print{ body{background:#fff} .toc,.crumb{display:none} }
+  :root {
+    --font-stack: "HarmonyOS Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --bg-base: #0b1120;
+    --card: rgba(17, 24, 39, 0.85);
+    --border: #1f2937;
+    --border-hover: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #38bdf8;
+    --danger: #e11d48;
+    --danger-bg: rgba(225, 29, 72, 0.12);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+  }
+
+  [data-theme="light"] {
+    --bg-base: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --border-hover: #0284c7;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent: #0284c7;
+    --danger: #dc2626;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--bg-base);
+    padding-top: max(8px, env(safe-area-inset-top, 8px));
+    padding-bottom: max(30px, env(safe-area-inset-bottom, 30px));
+    padding-left: max(8px, env(safe-area-inset-left, 8px));
+    padding-right: max(8px, env(safe-area-inset-right, 8px));
+    color: var(--text-primary);
+    font-family: var(--font-stack);
+    font-size: 12.5px;
+    font-weight: 400;
+    line-height: 1.48;
+    padding-bottom: 50px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .svg-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    stroke-width: 2;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: middle;
+  }
+
+  .container { max-width: 920px; margin: 0 auto; padding: 12px 14px; }
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 12px;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  .back-btn:hover { border-color: var(--accent); }
+
+  .alarm-banner {
+    background: var(--danger);
+    color: #ffffff;
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.25);
+  }
+
+  .alarm-banner .svg-icon { width: 26px; height: 26px; flex-shrink: 0; }
+
+  .toc-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 28px;
+    scrollbar-width: none;
+  }
+
+  .toc-nav::-webkit-scrollbar { display: none; }
+
+  .toc-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .toc-btn:hover { color: var(--text-primary); border-color: var(--accent); }
+
+  .section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+
+  .section-title .svg-icon { color: var(--accent); }
+
+  ul { padding-left: 20px; }
+  li { margin-bottom: 8px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; }
+  li b { color: var(--text-primary); font-weight: 600; }
+
+  .source {
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border);
+    padding-top: 10px;
+    margin-top: 14px;
+  }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .back-btn, .toc-nav { display: none; }
+    .section-card { border: 1px solid #ccc; background: none; }
+    .alarm-banner { background: none; color: #b91c1c; border: 2px solid #b91c1c; }
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 6px 8px; }
+    .top-bar { margin-bottom: 8px; padding-bottom: 8px; }
+    .alarm-banner { padding: 8px 10px; font-size: 12px; }
+    .toc-nav { margin-bottom: 12px; padding-bottom: 4px; }
+    .section-card { padding: 10px; margin-bottom: 8px; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap"><div class="bodyline">
-  <div class="logo">HAS_<span>Prepper</span>Disk</div>
-  <div class="crumb"><a href="/home">HAS_PrepperDisk Ana Sayfa</a> &raquo; Acil Durum</div>
-
-  <table class="forumline alarm"><tr><td>Hayati tehlike varsa ve telefon çalışıyorsa: 112</td></tr></table>
-
-  <div class="toc">
-    <a href="#an">Deprem anında</a> &middot; <a href="#enkaz">Enkaz altında</a> &middot;
-    <a href="#sonra">Deprem sonrasında</a> &middot; <a href="#su">İçme suyu</a> &middot;
-    <a href="#haber">Haberleşme</a> &middot; <a href="#canta">Afet çantası</a>
+<div class="container">
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">&larr; Geri</a>
+    <span style="font-size:12px; font-weight:500; color:var(--text-muted);">mFk AcilNet Çevrimdışı Acil Durum Protokolü</span>
   </div>
 
-  <table class="forumline" id="an">
-    <tr><td class="cat">Deprem anında</td></tr>
-    <tr><td class="row1"><ul>
-      <li><b>Çök, kapan, tutun:</b> güvenli bir yerde diz üstü çök, başını ve enseni koruyarak kapan, düşmemek için sabit bir yere tutun.</li>
-      <li>Merdivenlere ya da çıkışlara koşma. Balkona çıkma, balkondan ya da pencereden atlama.</li>
-      <li>Asansör kullanma.</li>
-      <li>Kibrit, çakmak yakma; elektrik düğmelerine dokunma.</li>
-      <li>Sabitlenmemiş dolap, raf ve pencerelerden uzak dur.</li>
-      <li><b>Açık alandaysan:</b> binalardan, ağaçlardan, direklerden ve enerji hatlarından uzak, boş bir yerde çök. Yamaç altlarından ve deniz kıyısından uzaklaş.</li>
-      <li><b>Araçtaysan:</b> yer güvenliyse yolu kapatmadan sağa yanaşıp dur, sarsıntı bitene kadar araçta bekle. Köprü üstü, ağaç ya da direk yanı gibi güvensiz bir yerdeysen aracı durdur, kontak anahtarını üzerinde bırakıp açık alana git.</li>
-    </ul></td></tr>
-    <tr><td class="src">Kaynak: AFAD Bursa İl Müdürlüğü, “Deprem” (bursa.afad.gov.tr/deprem); AFAD İstanbul İl Müdürlüğü, “Deprem Sonrası İlk 6 Saate Dikkat”, 02.03.2021.</td></tr>
-  </table>
+  <div class="alarm-banner">
+    <svg class="svg-icon" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>Hayati tehlike arz eden durumlarda ve şebeke erişimi mevcut olduğunda derhal 112 Acil Çağrı Merkezini arayınız.</div>
+  </div>
 
-  <table class="forumline" id="enkaz">
-    <tr><td class="cat">Enkaz altında kaldıysan</td></tr>
-    <tr><td class="row1"><ul>
-      <li>Panik yapmadan durumunu kontrol et.</li>
-      <li>Hareket edemiyorsan çıkmak için hayatını riske atacak hareketlere kalkışma. Kurtarma ekipleri sana ulaşmaya çalışacak.</li>
-      <li>Enerjini korumak için hareketlerini kontrol altında tut.</li>
-      <li>Ellerini ya da ayaklarını kullanabiliyorsan su, kalorifer ve gaz borularına ya da zemine vurarak varlığını duyur.</li>
-      <li>Sesini kullanabiliyorsan kurtarma ekiplerinin seslerini dinle ve onlara seslen; ama enerjini kontrollü kullan.</li>
-      <li>Kibrit ya da çakmak yakma.</li>
-    </ul></td></tr>
-    <tr><td class="src">Kaynak: AFAD Bursa İl Müdürlüğü, “Deprem” &mdash; “Yıkıntı altında mahsur kaldıysanız”.</td></tr>
-  </table>
+  <div class="toc-nav">
+    <a href="#an" class="toc-btn">Deprem Anında</a>
+    <a href="#enkaz" class="toc-btn">Enkaz Altında</a>
+    <a href="#su" class="toc-btn">İçme Suyu</a>
+    <a href="#sonra" class="toc-btn">Deprem Sonrası</a>
+    <a href="#haber" class="toc-btn">Haberleşme</a>
+    <a href="#canta" class="toc-btn">Afet Çantası</a>
+  </div>
 
-  <table class="forumline" id="sonra">
-    <tr><td class="cat">Deprem sonrasında</td></tr>
-    <tr><td class="row1"><ul>
-      <li>Önce kendi güvenliğinden emin ol, sonra çevrende yardım edebileceğin biri var mı bak.</li>
-      <li>Ayakkabını giy. Kendinin ve aileninin yaralanıp yaralanmadığını kontrol et.</li>
-      <li>Ocağı ve su vanasını kapat. Gaz kokusu <b>yoksa</b> elektrik şalterini kapat. Gaz kokusu alırsan gaz vanasını kapat, camları ve kapıları aç, binayı hemen terk et.</li>
-      <li>Afet çantanı al, binayı terk et ve en yakın toplanma alanına <b>yürüyerek</b> git. Yetkililer çağırana kadar orada kal.</li>
-      <li>Büyük depremlerden sonra artçı depremler olur. Sarsıntılar tamamen bitene kadar hasarlı binalara girme. Artçı sırasında da çök, kapan, tutun.</li>
-      <li>Acil yardım araçları geçebilsin diye ilk 6 saat aracını kullanma, yolları boş bırak.</li>
-      <li>Hasarlı binalardan ve enerji hatlarından uzak dur. Yaşlılara, bebeklere ve engellilere yardım et.</li>
-    </ul></td></tr>
-    <tr><td class="src">Kaynak: AFAD İstanbul İl Müdürlüğü, “Deprem Sonrası İlk 6 Saate Dikkat”; AFAD Bursa İl Müdürlüğü, “Deprem” ve “Afete Hazır Aile”.</td></tr>
-  </table>
+  <section class="section-card" id="an">
+    <div class="section-title">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <h2>1. Deprem Anında Uygulanacak Protokol</h2>
+    </div>
+    <ul>
+      <li><b>Çök, Kapan, Tutun:</b> Güvenli bir alanda diz çökünüz, baş ve ense bölgenizi koruyacak şekilde kapanınız ve sağlam bir nesneye tutununuz.</li>
+      <li>Merdivenlere veya çıkış noktalarına kesinlikle koşmayınız. Balkon veya pencerelerden uzak durunuz.</li>
+      <li>Asansörleri kesinlikle kullanmayınız.</li>
+      <li>Elektrik düğmelerine veya yanıcı maddelere temas etmeyiniz (gaz sızıntısı patlama riski oluşturabilir).</li>
+      <li>Sabitlenmemiş mobilya, raf ve cam yüzeylerden uzak durunuz.</li>
+      <li><b>Açık alandaysanız:</b> Enerji nakil hatlarından, yüksek binalardan ve ağaçlardan uzak açık bir noktada güvenli pozisyon alınız.</li>
+    </ul>
+    <div class="source">Kaynak: AFAD Deprem Müdahale Protokolleri.</div>
+  </section>
 
-  <table class="forumline" id="su">
-    <tr><td class="cat">İçme suyu</td></tr>
-    <tr><td class="row1"><ul>
-      <li>Temizliğinden emin olmadığın suyu içmeden önce kaynat ya da dezenfekte et.</li>
-      <li>Su bulanıksa önce dinlendir, sonra temiz bir bez, kağıt havlu ya da kahve filtresinden süz.</li>
-      <li><b>Kaynatma:</b> suyu en az 1 dakika fokur fokur kaynat. Yaklaşık 2000 metrenin (6500 feet) üstündeki yerlerde 3 dakika kaynat.</li>
-      <li><b>Çamaşır suyu:</b> yalnızca düz, kokusuz, katkısız çamaşır suyu kullan (parfümlü, renk koruyucu ya da temizlik katkılı olanlar kullanılmaz). Etiketinde sodyum hipoklorit oranı %6 yazıyorsa <b>litre başına 2 damla</b> damlat. Su bulanık, renkli ya da çok soğuksa miktarı iki katına çıkar. Karıştır ve 30 dakika beklet. Hafif klor kokusu yoksa aynı miktarı tekrar ekle ve 15 dakika daha beklet.</li>
-      <li>Etikette oran yazmıyorsa çamaşır suyuyla tahmine dayalı doz verme, suyu kaynat.</li>
-      <li>Kaynatma ve çamaşır suyu ağır metalleri, tuzları ve çoğu kimyasalı <b>temizlemez</b>. Üstünde yüzen madde olan, koyu renkli ya da kötü kokan suyu kullanma.</li>
-    </ul></td></tr>
-    <tr><td class="src">Kaynak: kaynatma süresi ABD Hastalık Kontrol Merkezi (CDC), “How to Make Water Safe in an Emergency”; çamaşır suyu ABD Çevre Koruma Ajansı (EPA), “Emergency Disinfection of Drinking Water” &mdash; galon (3,8 litre) başına %6’lık çamaşır suyundan 8 damla; litre başına 2 damla buradan hesaplanmıştır.</td></tr>
-  </table>
+  <section class="section-card" id="enkaz">
+    <div class="section-title">
+      <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h2>2. Enkaz Altında Hareket Tarzı</h2>
+    </div>
+    <ul>
+      <li>Sükunetinizi koruyunuz ve fiziksel durumunuzu kontrol ediniz.</li>
+      <li>Hareket kabiliyetiniz kısıtlıysa kontrolsüz hareketlerle oksijen ve enerjinizi tüketmeyiniz.</li>
+      <li>Ağız ve burun bölgenizi bir kumaş parçasıyla kapatarak toz girişini engelleyiniz.</li>
+      <li>Boru veya sert yüzeylere düzenli aralıklarla vurarak akustik sinyal veriniz.</li>
+      <li>Sesinizi yalnızca arama-kurtarma ekiplerinin sesini duyduğunuzda kullanınız.</li>
+    </ul>
+    <div class="source">Kaynak: AFAD Arama ve Kurtarma Standartları.</div>
+  </section>
 
-  <table class="forumline" id="haber">
-    <tr><td class="cat">Haberleşme</td></tr>
-    <tr><td class="row1"><ul>
-      <li>Hatlar kilitlenmesin diye operatör üzerinden arama yapma; SMS ve internet tabanlı uygulamaları tercih et.</li>
-      <li>Telefonu acil durumları ve yangınları bildirmek dışında kullanma.</li>
-      <li>Radyo gibi kitle iletişim araçlarından yapılan uyarıları dinle.</li>
-      <li>Bölge dışında bağlantı kuracağın bir kişiyi önceden belirle; ailecek ona haber verin.</li>
-    </ul></td></tr>
-    <tr><td class="src">Kaynak: AFAD İstanbul İl Müdürlüğü, “Deprem Sonrası İlk 6 Saate Dikkat”; AFAD Bursa İl Müdürlüğü, “Deprem” ve “Afete Hazır Aile”.</td></tr>
-  </table>
+  <section class="section-card" id="su">
+    <div class="section-title">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+      <h2>3. İçme Suyu Temini ve Dezenfeksiyon İlkeleri</h2>
+    </div>
+    <ul>
+      <li>Güvenliği doğrulanmamış açık su kaynaklarını arıtma işleminden geçirmeden tüketmeyiniz.</li>
+      <li><b>Kaynatma Yöntemi:</b> Suyu en az 1 dakika boyunca kaynatınız. Yüksek rakımlı alanlarda bu süreyi 3 dakikaya çıkarınız.</li>
+      <li><b>Kimyasal Dezenfeksiyon:</b> Yalnızca kokusuz ve katkısız (%5-6 sodyum hipoklorit içeren) çamaşır suyu kullanınız. 1 litre berrak suya 2 damla damlatınız; su bulanıksa dozu 4 damlaya çıkarınız ve tüketmeden önce en az 30 dakika bekleyiniz.</li>
+      <li>Klorlama işlemi kimyasal zehirleri, tarım ilaçlarını ve ağır metalleri tasfiye etmez.</li>
+    </ul>
+    <div class="source">Kaynak: DSÖ (WHO) ve Sağlık Bakanlığı İçme Suyu Arıtma Kılavuzları.</div>
+  </section>
 
-  <table class="forumline" id="canta">
-    <tr><td class="cat">Afet ve acil durum çantası (ilk 72 saat)</td></tr>
-    <tr><td class="row1"><ul>
-      <li>Yiyecek ve su</li>
-      <li>İlk yardım malzemeleri</li>
-      <li>Fener ve düdük</li>
-      <li>Önemli evrakların kopyaları (bir kopyası da bölge dışındaki bağlantı kişinde dursun)</li>
-      <li>Yatağının yanında: su, düdük, fener ve ayakkabı</li>
-    </ul></td></tr>
-    <tr><td class="src">Kaynak: AFAD Bursa İl Müdürlüğü, “Afete Hazır Aile”.</td></tr>
-  </table>
+  <section class="section-card" id="sonra">
+    <div class="section-title">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <h2>4. Deprem Sonrası Eylemler ve Tahliye</h2>
+    </div>
+    <ul>
+      <li>Önce kendi güvenliğinizden emin olunuz, ardından çevrenizde yardıma muhtaç birileri olup olmadığını kontrol ediniz.</li>
+      <li>Ayakkabılarınızı giyiniz; cam kırıkları ve molozlara karşı kendinizi ve ailenizi yaralanmalara karşı koruyunuz.</li>
+      <li>Ocağı ve su vanasını kapatınız. Gaz kokusu <b>yoksa</b> elektrik şalterini indiriniz. Gaz kokusu alırsanız vanayı kapatıp kapı/pencereleri açarak binayı derhal terk ediniz.</li>
+      <li>Acil durum çantanızı alarak binayı merdivenlerden terk ediniz ve en yakın toplanma alanına <b>yürüyerek</b> intikal ediniz.</li>
+      <li>Büyük depremlerden sonra artçı sarsıntılar devam eder. Hasarlı binalara kesinlikle girmeyiniz.</li>
+      <li>Acil müdahale ve kurtarma araçlarının geçişini engellememek için ilk 6 saat kesinlikle şahsi araç kullanmayınız.</li>
+    </ul>
+    <div class="source">Kaynak: AFAD İstanbul ve Bursa İl Müdürlüğü, “Deprem Sonrası İlk 6 Saate Dikkat”.</div>
+  </section>
 
-  <table class="forumline">
-    <tr><td class="cat">Daha fazlası</td></tr>
-    <tr><td class="row1">İlk yardım, su arıtma ve barınma için ayrıntılı kaynaklar <a href="/home">ana sayfadaki</a>
-      “Sağlık ve İlk Yardım” ve “Hayatta Kalma ve Hazırlık” bölümlerinde. Bu sayfa resmi kaynakların özetidir; sağlık ekiplerinin ve yetkililerin
-      talimatları her zaman önceliklidir.</td></tr>
-  </table>
+  <section class="section-card" id="haber">
+    <div class="section-title">
+      <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg>
+      <h2>5. Acil Durum Haberleşme İlkeleri</h2>
+    </div>
+    <ul>
+      <li>GSM hatlarının kilitlenmesini önlemek için sesli telefon araması yapmayınız; SMS ve internet tabanlı mesajlaşma kanallarını tercih ediniz.</li>
+      <li>Telefonu sadece hayati tehlike ve yangın ihbarı için 112 Acil Çağrı Merkezine ulaşmak amacıyla kullanınız.</li>
+      <li>Yerel telsiz ve radyo anonslarını dinleyiniz; teyit edilmemiş panik yaratacak asılsız söylentilere itibar etmeyiniz.</li>
+      <li>Afet öncesinde şehir dışından belirlediğiniz ortak temas kişisine ailenizin sağlık durumunu tek bir SMS ile bildiriniz.</li>
+    </ul>
+    <div class="source">Kaynak: AFAD ve BTK Acil Haberleşme Yönergeleri.</div>
+  </section>
 
-  <div class="copy">HAS_PrepperDisk &middot; Bu sayfa çevrimdışı çalışır, yazdırılabilir.</div>
-</div></div>
+  <section class="section-card" id="canta">
+    <div class="section-title">
+      <svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <h2>6. Afet ve Acil Durum Çantası (İlk 72 Saat)</h2>
+    </div>
+    <ul>
+      <li><b>Su ve Dayanıklı Gıda:</b> Kişi başı günlük en az 2 litre su ve yüksek kalorili, bozulmayan konserve/kuru gıdalar.</li>
+      <li><b>İlk Yardım ve İlaç:</b> Sargı bezi, turnike, antiseptik solüsyon, ağrı kesici ve kronik reçeteli ilaçlar.</li>
+      <li><b>Aydınlatma ve Sinyal:</b> Pilli/dinamolu fener, yedek piller ve akustik sinyal için düdük.</li>
+      <li><b>Önemli Belgeler:</b> Kimlik, tapu, sigorta ve pasaport fotokopileri (su geçirmez kilitli poşette).</li>
+      <li><b>Mevsimlik Kıyafet ve Battaniye:</b> Yağmurluk, termal battaniye, sağlam iş eldiveni ve toz maskesi (N95/FFP2).</li>
+    </ul>
+    <div class="source">Kaynak: AFAD “Afete Hazır Aile” Kılavuzu.</div>
+  </section>
+
+</div>
+
+<script>
+const currentTheme = localStorage.getItem('mfk_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+</script>
 </body>
 </html>

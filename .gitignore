@@ -2,3 +2,9 @@
 __MACOSX/
 *.zip
 Claude outputs/
+__pycache__/
+*.pyc
+*.original_backup
+notlar/
+*.local.md
+

@@ -304,4 +304,89 @@ SD kart ve SSD'deki boş alanı, web, Kiwix, hotspot ve DHCP servislerini, hotsp
 
 Bu repodaki betikler ve ana sayfa [MIT Lisansı](LICENSE) ile yayınlanmıştır. Internet-in-a-Box, Kiwix ve indirilen tüm içerikler (Wikipedia, OpenStreetMap vb.) kendi lisanslarına tabidir. Bu proje Internet-in-a-Box veya Kiwix ile bağlantılı değildir.
 
+---
 
+## <img src="assets/icons/shield.svg" width="20" height="20" align="absmiddle" alt=""> mFk AcilNet: Çevrimdışı Afet Bilgi ve Sivil İletişim İstasyonu
+
+**mFk AcilNet**, geniş ölçekli afet ve kriz senaryolarında harici telekomünikasyon altyapısı, hücresel şebekeler (GSM) ve şehir şebeke elektriği tamamen devre dışı kaldığında; sivil halkın ve ilk müdahale ekiplerinin kesintisiz haberleşebilmesini, hayati medikal kılavuzlara erişebilmesini ve durum koordinasyonunu sağlamak amacıyla **mFk Games** tarafından geliştirilmiş bağımsız bir **Afet Bilişim ve İletişim Platformudur**.
+
+Proje, [HAS_PrepperDisk](https://github.com/schematrix/HAS_Prepper_Disk) mimarisini kurumsal standartlarda genişleterek; kripto madenciliği (Helium / HNT) sonrası atıl kalan **Bobcat Miner 300** ve benzeri ARM tabanlı endüstriyel mikro sunucuları yüksek katma değerli birer **Mahalle Afet ve İletişim Kalkanına** dönüştürme (Hardware Upcycling) vizyonunu gerçekleştirir.
+
+---
+
+### Kurumsal Donanım ve Saha Avantajları (Bobcat Miner 300 & ARM)
+* **Düşük Enerji Tüketimi & Kesintisiz 12V Besleme:** Dört çekirdekli Rockchip ARM mimarisi ve doğrudan 12V DC giriş desteği sayesinde harici akü, jeneratör veya fotovoltaik güneş panelleriyle haftalarca kesintisiz çalışabilir.
+* **Tümleşik Endüstriyel Depolama:** Dahili 64 GB eMMC hafıza birimi sayesinde harici sürücü arızası riski olmadan temel ulusal acil durum veri tabanlarını, kılavuzları ve çevrimdışı arşivleri güvenle barındırır.
+* **Genişletilmiş Ağ & Telsiz Altyapısı:** Dahili Wi-Fi donanımıyla anında şifresiz sivil acil durum yayını (`mFk-AcilNet`), Gigabit Ethernet omurgası ve geleceğe hazır 868 MHz LoRa radyo haberleşme yetenekleri sunar.
+
+---
+
+### Kurulumdan Önce: Cihaz Uygun mu? (Bobcat / Helium ve diğer kutular)
+
+Donanım özellikleri model ve üretim serisine göre değişir; yukarıdaki değerler her cihazda aynı olmayabilir. Kurmadan önce cihazın üzerinde şunu çalıştır (salt okunur, hiçbir şeyi değiştirmez):
+
+```bash
+./scripts/preflight.sh
+```
+
+`install.sh` bu kontrolü kurulumdan önce kendisi de çalıştırır. Kontrol edilenler:
+
+| Kontrol | Neden önemli |
+|---|---|
+| Debian / Ubuntu / Raspberry Pi OS | Madencilerin kendi (kapalı) yazılımı yerine temiz bir imaj kurmak gerekir; IIAB yalnız bunlarda kurulur. |
+| Wi-Fi çipi AP (hotspot) modu | Desteklemiyorsa kutu kendi Wi-Fi ağını yayınlayamaz. AP destekli bir USB Wi-Fi adaptörü takılabilir. |
+| Boş alan | 64 GB cihazlarda hafif liste: `sudo ./scripts/download-content.sh config/content-lite.conf` |
+| RAM | 1 GB altı cihazlarda kurulum çok yavaştır. |
+
+Raspberry Pi olmayan cihazlarda `vcgencmd` yoktur; düşük voltaj uyarısı otomatik olarak devre dışı kalır, kurulum etkilenmez.
+
+---
+
+### Entegre Modüller ve Teknik Yetenekler
+
+Sistem web arayüzündeki kurumsal tasarım standartları ve SVG ikonografi mimarisiyle tam uyumlu çalışan entegre modüller:
+
+1. **<img src="assets/icons/alert.svg" width="20" height="20" align="absmiddle" alt=""> 112 Acil Durum & Afet Rehberi (`acil.html`):** 
+   AFAD, CDC ve EPA uluslararası afet yönetimi standartlarına uygun olarak tasarlanmış; deprem anı ve sonrası tahliye, yangın, sel ve enkaz güvenlik protokollerini içeren sivil müdahale kılavuzu.
+2. **<img src="assets/icons/mic.svg" width="20" height="20" align="absmiddle" alt=""> Sesli Bas-Konuş Afet Telsizi (`telsiz-sesli.html`):** 
+   İnternet, SIM kart ve hücresel şebeke bağımlılığı olmaksızın, yerel Wi-Fi ağı üzerinden canlı sesli anons ve yarı çift yönlü (Half-Duplex) sivil telsiz istasyonu.
+   * **Mikrofon için HTTPS gerekir:** Tarayıcılar mikrofonu yalnızca `https://` veya `localhost` üzerinde açar. `http://box.lan` ile bağlanan telefonlar dinleyebilir ama konuşamaz; konuşma için kutuya https (kendi imzalı sertifika) kurulmalıdır. Servis (`has-voice-service`, port 8081) `sudo ./scripts/install-homepage.sh` ile kurulur.
+   * **Yarı Çift Yönlü Çakışma Önleme:** Bir terminal mandalladığında diğer istemciler kilitlenir; ses bindirmesi ve frekans kirliliği engellenir.
+   * **30 Saniye TOT (Time-Out Timer) Koruması:** Mandalı takılı kalan terminallere karşı 30 saniye sonra yayını otomatik keserek kanalı acil durumlar için serbest bırakır.
+   * **Sıfır Dış Bağımlılık (Web Audio API):** İstemci tarafında saf matematiksel dalga formlarıyla üretilen 1050 Hz + 1250 Hz çift tonlu Roger Beep, mekanik mandal klik sesi ve squelch tail (hışırtı kesimi).
+   * **3 Ayrık Operasyon Kanalı:** Kanal 1 (Genel Acil), Kanal 2 (Arama Kurtarma), Kanal 3 (İlk Yardım & Sağlık).
+   * **Canlı Dinleme Desteği:** Ağa bağlı tüm telefon ve bilgisayarlar telsiz anonslarını hoparlörden canlı dinleyebilir.
+3. **<img src="assets/icons/message.svg" width="20" height="20" align="absmiddle" alt=""> Afet Mesajlaşma & Kriz Panosu (`mesaj.html`):** 
+   Afetzedelerin durum bildirimi yapabildiği, arama kurtarma ve medikal ihtiyaç taleplerini iletebildiği ve istasyon yetkililerinin duyurular yayınladığı gerçek zamanlı kriz haberleşme terminali.
+   * **Tek Dokunuşla Hızlı Bildirim:** Acil Kurtarma, İçme Suyu & Erzak, İlk Yardım / İlaç, Çadır & Barınma, Güvendeyim şablonları.
+   * **Filtrelenebilir Kriz Akışı:** Duyuru, Acil Durum, İhtiyaç Talebi ve Güvende filtreleri.
+4. **<img src="assets/icons/map.svg" width="20" height="20" align="absmiddle" alt=""> Çevrimdışı Vektörel Harita Servisi (`harita.html`):** 
+   Kuzey ve Doğu Anadolu fay hatları (KAF & DAF), 81 il afet koordinatları, toplanma alanları ve harici internet gerektirmeyen çevrimdışı GPS mesafe cetveli.
+5. **<img src="assets/icons/health.svg" width="20" height="20" align="absmiddle" alt=""> Sağlık & Tıp / WikiMed Tıp Ansiklopedisi (`tip.html`):** 
+   Turnike uygulamaları, CPR (kalp masajı), sahra atellemesi, travma müdahaleleri, salgın hastalıklar ve acil farmakoloji başvuru kütüphanesi.
+6. **<img src="assets/icons/shield.svg" width="20" height="20" align="absmiddle" alt=""> Afet & Kriz / AFAD Toplanma Alanları (`toplanma.html`):** 
+   81 il ve mahalle ölçeğinde resmi toplanma alanları, sahra hastaneleri ve çadır kent yerleşim kapasiteleri arşivi.
+7. **<img src="assets/icons/radio.svg" width="20" height="20" align="absmiddle" alt=""> Türkiye Telsiz Röle Frekansları (`telsiz.html`):** 
+   Türkiye geneli amatör telsiz VHF/UHF röle listesi, shift (+/-) yönleri, CTCSS alt tonları ve 145.500 MHz ulusal simplex acil çağrı frekans rehberi.
+8. **<img src="assets/icons/droplet.svg" width="20" height="20" align="absmiddle" alt=""> Su & Gıda Güvenliği (`su-gida.html`):** 
+   Klorlama dozaj tabloları, SODIS solar su dezenfeksiyonu, uzun süreli gıda muhafazası ve 6 temel kurtarma/bağlama düğümü.
+9. **<img src="assets/icons/tool.svg" width="20" height="20" align="absmiddle" alt=""> Teknik & Tamir / Solar & Akü Altyapısı (`solar.html`):** 
+   12V fotovoltaik şarj regülatör bağlantı hiyerarşisi, 18650 lityum BMS kontrolü, jeneratör yakıt ve karbüratör saha onarım şemaları.
+10. **<img src="assets/icons/hazard.svg" width="20" height="20" align="absmiddle" alt=""> HazMat Kimyasal Güvenlik Kılavuzu (`hazmat.html`):** 
+    Endüstriyel klor/amonyak sızıntıları için rüzgar yönü tahliye koridorları, kimyasal madde sınıfları ve yangın söndürme protokolleri.
+11. **<img src="assets/icons/terminal.svg" width="20" height="20" align="absmiddle" alt=""> Sistem Kurtarma ve Donanım Terminali (`sistem-rehberi.html`):** 
+    İstasyon mikro sunucusu (Bobcat / Raspberry Pi) için salt okunur Linux arıza teşhis ve dosya sistemi kurtarma komut seti.
+12. **<img src="assets/icons/globe.svg" width="20" height="20" align="absmiddle" alt=""> Dinamik Esir Portalı (Captive Portal):** 
+    İstasyon Wi-Fi alanına giriş yapan tüm Android ve iOS cihazlarda bildirim ekranı olarak anında açılan, sıfır harici CDN bağımlılığıyla 0 ms gecikmeyle yüklenen mobil uyumlu arayüz.
+13. **<img src="assets/icons/play.svg" width="20" height="20" align="absmiddle" alt=""> Tek Tıkla Simülasyon & Test (`baslat.bat`):** 
+    Windows ve geliştirici ortamlarında saha testlerini anında yürütmek için Python tabanlı yerel HTTP & API simülasyon sunucusu.
+
+---
+
+### Kurumsal Mimari & Geliştirici Bilgisi
+
+* **Proje Sahibi & Sistem Mimarisi:** **mFk Games**
+* **Resmi Depo:** [github.com/mFkGames/mFk-AcilNet-Afet-Istasyonu](https://github.com/mFkGames/mFk-AcilNet-Afet-Istasyonu)
+* **Temel Altyapı:** [HAS_PrepperDisk](https://github.com/schematrix/HAS_Prepper_Disk) / [Internet-in-a-Box (IIAB)](https://github.com/iiab/iiab) / [Kiwix](https://kiwix.org)
+* **Lisans:** MIT Lisansı (Açık Kaynak & Sivil Kullanım)
+* **İlke:** *Kesintisiz Sivil İletişim ve Afet Güvenlik Protokolü*

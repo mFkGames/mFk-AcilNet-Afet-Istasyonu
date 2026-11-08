@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="author" content="mFk Games">
+<title>Afet Mesaj &amp; Kriz Panosu</title>
+<style>
+  :root {
+    --bg-base: #090d16;
+    --card-bg: #0f172a;
+    --card-hover: #1e293b;
+    --border: #1e293b;
+    --border-hover: #38bdf8;
+    
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    
+    --accent: #38bdf8;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --radius: 8px;
+  }
+
+  [data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --card-bg: #ffffff;
+    --card-hover: #e2e8f0;
+    --border: #cbd5e1;
+    --border-hover: #0284c7;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --text-dim: #64748b;
+    --accent: #0284c7;
+    --danger: #dc2626;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg-base);
+    color: var(--text-main);
+    padding-top: max(6px, env(safe-area-inset-top, 6px));
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    padding-left: max(6px, env(safe-area-inset-left, 6px));
+    padding-right: max(6px, env(safe-area-inset-right, 6px));
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 8px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .svg-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.2;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: middle;
+  }
+
+  /* 1. ÜST NAVİGASYON ŞERİDİ */
+  .top-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 11.5px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    padding: 6px 11px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn-back:hover { border-color: var(--accent); }
+
+  .station-title {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: -0.2px;
+    color: var(--accent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    flex: 1;
+  }
+
+  .top-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-telsiz-link {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid var(--warning);
+    color: #fbbf24;
+    padding: 6px 11px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .btn-telsiz-link:hover {
+    background: var(--warning);
+    color: #000;
+  }
+
+  .live-pill {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #34d399;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .live-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 6px var(--success);
+  }
+
+  /* 2. HIZLI DURUM VE ŞABLON ÇUBUĞU */
+  .quick-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    margin-bottom: 8px;
+  }
+
+  .quick-label {
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .template-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .btn-pill-tpl {
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 6px 11px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .btn-pill-tpl:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-0.5px);
+  }
+  .btn-pill-tpl.tpl-danger { border-color: rgba(239, 68, 68, 0.45); color: #f87171; }
+  .btn-pill-tpl.tpl-warning { border-color: rgba(245, 158, 11, 0.45); color: #fbbf24; }
+  .btn-pill-tpl.tpl-success { border-color: rgba(16, 185, 129, 0.45); color: #34d399; }
+
+  /* 3. KATEGORİ FİLTRELEME SEKMELERİ */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .tab-chip {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 2px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .tab-chip:hover {
+    border-color: var(--text-muted);
+    color: var(--text-main);
+  }
+  .tab-chip.active {
+    background: rgba(56, 189, 248, 0.16);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+  }
+
+  /* 4. CANLI MESAJ AKIŞ PANELİ */
+  .chat-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    flex: 1;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .messages-viewport {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 8px;
+    padding-right: 2px;
+    max-height: 52vh;
+  }
+
+  .msg-card {
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+
+  .msg-card.cat-duyuru {
+    border-color: rgba(56, 189, 248, 0.35);
+    background: rgba(56, 189, 248, 0.04);
+  }
+  .msg-card.cat-acil {
+    border-color: rgba(239, 68, 68, 0.6);
+    background: rgba(239, 68, 68, 0.08);
+  }
+  .msg-card.cat-ihtiyac {
+    border-color: rgba(245, 158, 11, 0.55);
+    background: rgba(245, 158, 11, 0.07);
+  }
+  .msg-card.cat-guvende {
+    border-color: rgba(16, 185, 129, 0.55);
+    background: rgba(16, 185, 129, 0.07);
+  }
+
+  .msg-badge-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badge-category {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+  .badge-category.duyuru { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+  .badge-category.acil { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+  .badge-category.ihtiyac { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+  .badge-category.guvende { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+  .msg-author-name {
+    font-weight: 800;
+    font-size: 11.5px;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+
+  .msg-content {
+    font-size: 13.5px;
+    color: var(--text-main);
+    word-break: break-word;
+    white-space: pre-wrap;
+    line-height: 1.45;
+  }
+
+  /* 5. MESAJ GÖNDERME KONTROL FORMU */
+  .composer-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+
+  .composer-row-top {
+    display: flex;
+    gap: 6px;
+  }
+
+  .author-field {
+    width: 140px;
+    height: 36px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 0 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .author-field:focus { border-color: var(--accent); }
+
+  .cat-selector {
+    flex: 1;
+    height: 36px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 0 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .cat-selector:focus { border-color: var(--accent); }
+
+  .composer-row-bottom {
+    display: flex;
+    gap: 6px;
+  }
+
+  .msg-text-input {
+    flex: 1;
+    height: 40px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .msg-text-input:focus { border-color: var(--accent); }
+
+  .btn-submit {
+    height: 40px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .btn-submit:hover {
+    background: #7dd3fc;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+    transform: translateY(-0.5px);
+  }
+
+  /* 6. ALT BİLGİ & MFk GAMES PROTOKOLÜ */
+  .footer-sig {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 8px 0 2px;
+    font-weight: 600;
+  }
+
+  /* 7. MOBİL DUYARLILIK (<= 640px) */
+  @media (max-width: 640px) {
+    body { padding: 4px; font-size: 12px; }
+    .wrap { max-width: 100%; }
+    .top-strip { padding: 6px 8px; }
+    .station-title { font-size: 11.5px; }
+    .tab-chip { font-size: 10px; padding: 5px 1px; height: 28px; border-radius: 10px; }
+    .btn-back { padding: 5px 8px; font-size: 11px; }
+    .btn-telsiz-link { padding: 5px 8px; font-size: 10.5px; }
+    .live-pill { padding: 5px 7px; font-size: 9.5px; }
+    .chat-panel { min-height: 270px; padding: 8px; border-radius: 10px; }
+    .messages-viewport { max-height: 48vh; gap: 6px; }
+    .msg-card { padding: 8px 10px; }
+    .msg-content { font-size: 12.5px; }
+    .author-field { width: 115px; height: 36px; font-size: 11px; }
+    .cat-selector { height: 36px; font-size: 11px; }
+    .msg-text-input { height: 38px; font-size: 12px; }
+    .btn-submit { height: 38px; padding: 0 14px; font-size: 12px; }
+    .btn-pill-tpl { font-size: 10.5px; padding: 5px 8px; height: 30px; }
+    .footer-sig { font-size: 9.5px; padding: 6px 0 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- 1. ÜST NAVİGASYON ŞERİDİ -->
+  <header class="top-strip">
+    <a href="index.html" class="btn-back">
+      <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      <span>Geri</span>
+    </a>
+
+    <div class="station-title">
+      Afet Mesaj &amp; Kriz Panosu
+    </div>
+
+    <div class="top-actions">
+      <a href="telsiz-sesli.html" class="btn-telsiz-link" title="Sesli Bas-Konuş Telsizini Aç">
+        <svg class="svg-icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+        <span>Telsiz</span>
+      </a>
+      <div class="live-pill">
+        <span class="dot"></span>
+        <span>Ağ Aktif</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. HIZLI DURUM VE ŞABLON ÇUBUĞU -->
+  <div class="quick-card">
+    <div class="quick-label">
+      <span>Hızlı Afet Durum Bildirimi</span>
+    </div>
+    <div class="template-grid">
+      <button class="btn-pill-tpl tpl-danger" onclick="applyTemplate('Bulunduğumuz noktada acil arama-kurtarma ve ilk yardım ekibi gerekiyor!', 'acil')">
+        <svg class="svg-icon" viewBox="0 0 24 24" style="color:var(--danger);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Acil Kurtarma</span>
+      </button>
+
+      <button class="btn-pill-tpl tpl-warning" onclick="applyTemplate('İçme suyu ve bozulmayan kuru gıda desteğine ihtiyacımız var.', 'ihtiyac')">
+        <svg class="svg-icon" viewBox="0 0 24 24" style="color:var(--warning);"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        <span>İçme Suyu &amp; Erzak</span>
+      </button>
+
+      <button class="btn-pill-tpl tpl-warning" onclick="applyTemplate('Tıbbi ilk yardım malzemesi (turnike, sargı bezi, ağrı kesici) gerekiyor.', 'ihtiyac')">
+        <svg class="svg-icon" viewBox="0 0 24 24" style="color:var(--warning);"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>İlk Yardım</span>
+      </button>
+
+      <button class="btn-pill-tpl tpl-warning" onclick="applyTemplate('Çadır, termal battaniye ve soğuktan korunma malzemesi aranıyor.', 'ihtiyac')">
+        <svg class="svg-icon" viewBox="0 0 24 24" style="color:var(--warning);"><path d="m19 20-7-14-7 14M12 6v14m-7 0h14"/></svg>
+        <span>Çadır &amp; Barınma</span>
+      </button>
+
+      <button class="btn-pill-tpl tpl-success" onclick="applyTemplate('Ailemle birlikte toplanma alanındayız, genel sağlık durumumuz iyi.', 'guvende')">
+        <svg class="svg-icon" viewBox="0 0 24 24" style="color:var(--success);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <span>Güvendeyim</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 3. KATEGORİ FİLTRELEME -->
+  <div class="filter-bar">
+    <div class="filter-tabs" id="filter-tabs">
+      <button class="tab-chip active" data-filter="all">Tümü</button>
+      <button class="tab-chip" data-filter="duyuru">Duyuru</button>
+      <button class="tab-chip" data-filter="acil">Acil</button>
+      <button class="tab-chip" data-filter="ihtiyac">İhtiyaç</button>
+      <button class="tab-chip" data-filter="guvende">Güvende</button>
+    </div>
+  </div>
+
+  <!-- 4. CANLI MESAJ AKIŞ PANELİ -->
+  <main class="chat-panel">
+    <div class="messages-viewport" id="messages-container">
+      <!-- Mesajlar dinamik olarak buraya eklenecektir -->
+    </div>
+  </main>
+
+  <!-- 5. MESAJ GÖNDERME KONTROL FORMU -->
+  <form class="composer-card" id="composer-form">
+    <div class="composer-row-top">
+      <input type="text" id="author-input" class="author-field" placeholder="Çağrı Kodu / Ad" required>
+      <select id="category-select" class="cat-selector">
+        <option value="duyuru">Genel Duyuru / Bilgi</option>
+        <option value="acil">Acil Durum Bildirimi</option>
+        <option value="ihtiyac">İhtiyaç / Yardım Talebi</option>
+        <option value="guvende">Güvendeyim Bildirimi</option>
+      </select>
+    </div>
+    <div class="composer-row-bottom">
+      <input type="text" id="message-input" class="msg-text-input" placeholder="Afet duyurunuzu veya mesajınızı yazın... (Enter ile ilet)" required autocomplete="off">
+      <button type="submit" class="btn-submit">
+        <svg class="svg-icon" viewBox="0 0 24 24" style="width:13px; height:13px; stroke-width:2.4;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>İlet</span>
+      </button>
+    </div>
+  </form>
+
+  <!-- 6. FOOTER PROTOKOLÜ -->
+  <footer class="footer-sig">
+    mFk Games &bull; Kesintisiz Sivil İletişim Protokolü
+  </footer>
+
+</div>
+
+<script>
+const esc = s => String(s || '').replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const authorInput = document.getElementById("author-input");
+const categorySelect = document.getElementById("category-select");
+const messageInput = document.getElementById("message-input");
+const composerForm = document.getElementById("composer-form");
+const messagesContainer = document.getElementById("messages-container");
+
+let currentFilter = "all";
+let allMessages = [
+  {
+    cat: "duyuru",
+    text: "mFk AcilNet İstasyonu aktif. Çevrimdışı yerel Wi-Fi ağı üzerinden kesintisiz çalışmaktadır."
+  }
+];
+
+// Çağrı kodunu hatırla veya otomatik üret
+try {
+  const savedAuthor = localStorage.getItem("mfk_callsign") || localStorage.getItem("mfk_comms_author");
+  if (savedAuthor) {
+    authorInput.value = savedAuthor;
+  } else {
+    const rnd = Math.floor(100 + Math.random() * 900);
+    authorInput.value = `AFETZEDE-${rnd}`;
+  }
+} catch (e) {}
+
+authorInput.addEventListener("input", () => {
+  const v = authorInput.value.trim().toUpperCase();
+  try {
+    localStorage.setItem("mfk_callsign", v);
+    localStorage.setItem("mfk_comms_author", v);
+  } catch (e) {}
+});
+
+// Eski / bozuk verileri temizle ve modernize et
+try {
+  let stored = JSON.parse(localStorage.getItem("mfk_comms_data") || "null");
+  if (Array.isArray(stored) && stored.length) {
+    stored = stored.map(m => {
+      const text = m.text || '';
+      const cat = m.cat || m.category || 'duyuru';
+      const author = (m.author && m.author !== 'SİSTEM' && m.author !== 'ANONİM' && m.author !== 'DUYURU') ? m.author : '';
+      return { cat, text, author };
+    }).filter(m => m.text);
+    if (stored.length) {
+      allMessages = stored;
+      localStorage.setItem("mfk_comms_data", JSON.stringify(stored));
+    }
+  }
+} catch (e) {}
+
+// Şablon butonuna dokunulduğunda
+function applyTemplate(text, cat) {
+  messageInput.value = text;
+  categorySelect.value = cat;
+  messageInput.focus();
+}
+
+// Mesaj Listesini Çiz (Saat yok, [S] avatarı yok, SİSTEM yazısı yok - Sadece temiz DUYURU ve isim var)
+function renderList() {
+  const filtered = allMessages.filter(m => {
+    if (currentFilter === "all") return true;
+    const cat = (m.cat || m.category || "duyuru").toLowerCase();
+    return cat === currentFilter;
+  });
+
+  if (!filtered.length) {
+    messagesContainer.innerHTML = `
+      <div style="text-align:center; padding:32px 10px; color:var(--text-dim); font-size:12px;">
+        Bu kategoride henüz duyuru veya mesaj bulunmuyor.
+      </div>
+    `;
+    return;
+  }
+
+  messagesContainer.innerHTML = filtered.map(m => {
+    const cat = (m.cat || m.category || "duyuru").toLowerCase();
+    let catClass = "duyuru";
+    let catLabel = "DUYURU";
+
+    if (cat === "acil") {
+      catClass = "acil";
+      catLabel = "ACİL DURUM";
+    } else if (cat === "ihtiyac") {
+      catClass = "ihtiyac";
+      catLabel = "İHTİYAÇ";
+    } else if (cat === "guvende") {
+      catClass = "guvende";
+      catLabel = "GÜVENDE";
+    }
+
+    const hasCustomAuthor = m.author && m.author !== "SİSTEM" && m.author !== "ANONİM" && m.author !== "DUYURU";
+
+    return `
+      <div class="msg-card cat-${catClass}">
+        <div class="msg-badge-line">
+          <span class="badge-category ${catClass}">${catLabel}</span>
+          ${hasCustomAuthor ? `<span class="msg-author-name">${esc(m.author.toUpperCase())}</span>` : ""}
+        </div>
+        <div class="msg-content">${esc(m.text || '')}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+// Ağdan Mesajları Sessizce Çek (Akıllı Polling: 404 durumunda konsolu spamlamaz)
+let isSyncing = false;
+let apiAvailable = true;
+let MSG_API = ""; // "" = aynı origin (port 80); 404 olursa :8081'e düşer
+
+function syncMessages() {
+  if (isSyncing || !apiAvailable) return;
+  isSyncing = true;
+
+  fetch(MSG_API + "/api/messages")
+    .then(r => {
+      if (r.status === 404 && !MSG_API) {
+        // Port 80'de yok (Nginx yönlendirmesi yok): bağımsız mikro-servise (8081) geç
+        MSG_API = `http://${location.hostname || '127.0.0.1'}:8081`;
+        isSyncing = false;
+        return null;
+      }
+      if (r.status === 404) {
+        apiAvailable = false;
+        isSyncing = false;
+        return null;
+      }
+      return r.ok ? r.json() : null;
+    })
+    .then(serverMsgs => {
+      isSyncing = false;
+      if (serverMsgs && Array.isArray(serverMsgs) && serverMsgs.length) {
+        allMessages = serverMsgs.map(m => {
+          const text = m.text || '';
+          const cat = m.cat || m.category || 'duyuru';
+          const author = (m.author && m.author !== 'SİSTEM' && m.author !== 'ANONİM' && m.author !== 'DUYURU') ? m.author : '';
+          return { cat, text, author };
+        }).filter(m => m.text);
+        try { localStorage.setItem("mfk_comms_data", JSON.stringify(allMessages)); } catch (e) {}
+      }
+      renderList();
+    })
+    .catch(() => {
+      isSyncing = false;
+      renderList();
+    });
+}
+
+// Başlangıç ve Canlı Dinleme
+renderList();
+syncMessages();
+setInterval(syncMessages, 3000);
+
+// Mesaj Gönder
+composerForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const author = (authorInput.value || "AFETZEDE").trim().toUpperCase();
+  const text = messageInput.value.trim();
+  const cat = categorySelect.value || "duyuru";
+
+  if (!author || !text) return;
+
+  const payload = { author, text, cat };
+
+  // 1. Önce yerel listeye ekle
+  allMessages.unshift(payload);
+  if (allMessages.length > 40) allMessages.pop();
+  try { localStorage.setItem("mfk_comms_data", JSON.stringify(allMessages)); } catch (e) {}
+  renderList();
+
+  // 2. Sunucuya sessizce ilet
+  fetch(MSG_API + "/api/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    syncMessages();
+  }).catch(() => {});
+
+  messageInput.value = "";
+  messageInput.focus();
+});
+
+// Filtre Sekmeleri
+document.getElementById("filter-tabs").addEventListener("click", e => {
+  const btn = e.target.closest(".tab-chip");
+  if (!btn) return;
+  document.querySelectorAll(".tab-chip").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  currentFilter = btn.getAttribute("data-filter");
+  renderList();
+});
+</script>
+</body>
+</html>

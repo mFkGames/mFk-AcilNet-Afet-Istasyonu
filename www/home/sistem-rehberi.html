@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>mFk AcilNet - Çevrimdışı Linux &amp; Raspberry Pi Acil Sistem Komutları</title>
+<style>
+  :root {
+    --bg-base: #090d16;
+    --card-bg: #0f172a;
+    --border: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --radius: 6px;
+  }
+  [data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --card-bg: #ffffff;
+    --border: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-base);
+    padding-top: max(8px, env(safe-area-inset-top, 8px));
+    padding-bottom: max(30px, env(safe-area-inset-bottom, 30px));
+    padding-left: max(8px, env(safe-area-inset-left, 8px));
+    padding-right: max(8px, env(safe-area-inset-right, 8px));
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 10px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  .top-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+  }
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 11px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .article-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .article-card h2 {
+    font-size: 15px;
+    color: #38bdf8;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  pre {
+    background: #060b13;
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 11.5px;
+    color: #38bdf8;
+    overflow-x: auto;
+    margin: 6px 0;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 6px; }
+    .top-strip { flex-direction: column; align-items: stretch; gap: 4px; text-align: center; }
+    .btn-back { align-self: flex-start; }
+    .article-card { padding: 10px 12px; margin-bottom: 8px; }
+    pre { font-size: 10px; padding: 6px 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-strip">
+    <a href="index.html" class="btn-back">&larr; Geri</a>
+    <span style="font-weight:700; font-size:12px;">Unix &amp; Linux &bull; Çevrimdışı İstasyon Kurtarma Komutları</span>
+    <span style="font-size:10px; color:#10b981;">● Terminal Komut Kütüphanesi</span>
+  </div>
+
+  <div class="article-card">
+    <h2>1. Wi-Fi Hotspot ve Erişim Noktası Sorun Giderme</h2>
+    <p>Wi-Fi yayını kesildiğinde veya telefonlar IP alamadığında çalıştırılacak komutlar:</p>
+    <pre>
+# Wi-Fi kart durumunu kontrol et
+sudo rfkill unblock all
+ip link show wlan0
+
+# Hostapd ve DHCP servislerini yeniden başlat
+sudo systemctl restart hostapd
+sudo systemctl restart dnsmasq
+
+# Bağlı kullanıcıları listele
+sudo arp-scan --interface=br0 --localnet
+    </pre>
+  </div>
+
+  <div class="article-card">
+    <h2>2. Disk Doluluğu ve Acil Alan Açma</h2>
+    <pre>
+# Disk doluluk oranını kontrol et
+df -h /library /
+
+# Log dosyalarını temizle ve acil yer aç
+sudo journalctl --vacuum-size=50M
+sudo rm -rf /tmp/* /var/tmp/*
+sudo apt clean
+    </pre>
+  </div>
+
+  <div class="article-card">
+    <h2>3. Raspberry Pi Donanım ve Voltaj Kontrolü</h2>
+    <pre>
+# Sıcaklık ve Voltaj kontrolü
+vcgencmd measure_temp
+vcgencmd get_throttled
+
+# Açıklama:
+# 0x0   -> Normal voltaj ve sıcaklık
+# 0x50000 -> Geçmişte düşük voltaj veya ısınma yaşanmış
+# 0x50005 -> ANLIK DÜŞÜK VOLTAJ! Adaptörü veya kabloyu değiştirin.
+    </pre>
+  </div>
+</div>
+<script>
+const currentTheme = localStorage.getItem('mfk_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+</script>
+</body>
+</html>

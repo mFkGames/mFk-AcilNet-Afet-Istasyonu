@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>mFk AcilNet - Çevrimdışı Harita & Navigasyon Servisi</title>
+<style>
+  :root {
+    --bg-base: #090d16;
+    --card-bg: #0f172a;
+    --border: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --danger: #e11d48;
+    --success: #10b981;
+    --radius: 5px;
+  }
+  [data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --card-bg: #ffffff;
+    --border: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-base);
+    padding-top: max(8px, env(safe-area-inset-top, 8px));
+    padding-bottom: max(30px, env(safe-area-inset-bottom, 30px));
+    padding-left: max(8px, env(safe-area-inset-left, 8px));
+    padding-right: max(8px, env(safe-area-inset-right, 8px));
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    padding: 8px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 11px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .map-wrapper {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    min-height: 0;
+  }
+  .sidebar {
+    width: 280px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .map-canvas-container {
+    flex: 1;
+    background: #060b13;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    position: relative;
+    overflow: hidden;
+    cursor: crosshair;
+  }
+  #map-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .map-overlay-info {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 10.5px;
+    color: #38bdf8;
+    pointer-events: none;
+  }
+  .map-controls {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .map-btn {
+    width: 28px;
+    height: 28px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .city-btn {
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    padding: 5px 8px;
+    border-radius: 4px;
+    color: var(--text-main);
+    text-align: left;
+    cursor: pointer;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .city-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .badge-fault { font-size: 9px; padding: 1px 4px; border-radius: 2px; background: rgba(225,29,72,0.2); color: #f87171; }
+
+  @media (max-width: 640px) {
+    body { height: auto; min-height: 100vh; overflow-y: auto; padding: 4px; }
+    .top-nav { flex-direction: column; align-items: stretch; gap: 4px; padding: 6px 8px; text-align: center; }
+    .top-nav .btn-back { align-self: flex-start; }
+    .map-wrapper { flex-direction: column; height: auto; }
+    .map-canvas-container {
+      height: 320px;
+      min-height: 320px;
+      width: 100%;
+      order: 1;
+    }
+    .sidebar {
+      width: 100%;
+      order: 2;
+      max-height: none;
+      padding: 8px;
+    }
+    .city-btn { padding: 8px 10px; font-size: 12px; }
+    .map-overlay-info { font-size: 9.5px; padding: 4px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="index.html" class="btn-back">&larr; Geri</a>
+    <a href="/maps/" class="btn-back" style="color:var(--success); border-color:rgba(16,185,129,0.4);" title="İndirilmiş OpenStreetMap Sokak Haritalarını Açar">🗺️ Detaylı Sokak Haritası (OSM)</a>
+  </div>
+  <span style="font-weight:600; font-size:11.5px;">Çevrimdışı Vektörel Harita & Navigasyon Servisi (İnternetsiz)</span>
+  <span style="font-size:10px; color:var(--success);">● GPS / Vektör Motoru Aktif</span>
+</div>
+
+<div class="map-wrapper">
+  <div class="sidebar">
+    <div style="font-weight:700; font-size:12px; color:var(--accent);">Hızlı Şehir & Koordinat Seçimi</div>
+    <div style="font-size:10.5px; color:var(--text-muted);">Tıklayarak haritayı ilgili afet merkezine odaklayın. Harita üzerinde tıklayarak anlık GPS koordinatı alabilirsiniz.</div>
+    
+    <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+      <button class="city-btn" onclick="focusCoord(41.0082, 28.9784, 'İstanbul')">
+        <span>İstanbul (Marmara)</span>
+        <span class="badge-fault">KAF Fayı</span>
+      </button>
+      <button class="city-btn" onclick="focusCoord(38.4237, 27.1428, 'İzmir')">
+        <span>İzmir (Ege)</span>
+        <span class="badge-fault">Gediz Fayı</span>
+      </button>
+      <button class="city-btn" onclick="focusCoord(37.5753, 36.9228, 'K.Maraş')">
+        <span>Kahramanmaraş</span>
+        <span class="badge-fault">DAF Fayı</span>
+      </button>
+      <button class="city-btn" onclick="focusCoord(36.2023, 36.1606, 'Hatay')">
+        <span>Hatay / Antakya</span>
+        <span class="badge-fault">Ölü Deniz</span>
+      </button>
+      <button class="city-btn" onclick="focusCoord(39.9334, 32.8597, 'Ankara')">
+        <span>Ankara (Başkent)</span>
+        <span style="font-size:9px; color:var(--success);">Lojistik</span>
+      </button>
+      <button class="city-btn" onclick="focusCoord(37.0662, 37.3833, 'Gaziantep')">
+        <span>Gaziantep</span>
+        <span class="badge-fault">G.Doğu</span>
+      </button>
+    </div>
+
+    <div style="margin-top:auto; display:flex; flex-direction:column; gap:6px;">
+      <a href="/maps/" class="city-btn" style="border-color:var(--accent); color:var(--accent); text-align:center; display:block; font-weight:700;">
+        🗺️ Detaylı Sokak Haritası (/maps/) &rarr;
+      </a>
+      <div style="background:var(--bg-base); padding:8px; border-radius:4px; border:1px solid var(--border); font-size:10.5px;">
+        <div style="font-weight:600; color:var(--text-main); margin-bottom:2px;">Ölçüm & Mesafe Aracı:</div>
+        <div>Haritada ardışık iki noktaya tıklayarak kuş uçuşu km mesafesini ölçebilirsiniz.</div>
+        <div id="measure-result" style="color:#38bdf8; font-weight:700; margin-top:4px;">Mesafe: 0 km</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-canvas-container" id="map-box">
+    <canvas id="map-canvas"></canvas>
+    
+    <div class="map-controls">
+      <button class="map-btn" onclick="zoomIn()">+</button>
+      <button class="map-btn" onclick="zoomOut()">&minus;</button>
+      <button class="map-btn" onclick="resetView()" title="Türkiye Geneli">⌂</button>
+    </div>
+
+    <div class="map-overlay-info" id="coord-bar">
+      Enlem: 39.0000° N &bull; Boylam: 35.0000° E &bull; Yakınlaştırma: 1.0x
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById("map-canvas");
+const ctx = canvas.getContext("2d");
+const coordBar = document.getElementById("coord-bar");
+const measureResult = document.getElementById("measure-result");
+
+let scale = 1.0;
+let offsetX = 0;
+let offsetY = 0;
+let isDragging = false;
+let startX, startY;
+let clickPoints = [];
+
+// Türkiye Şehir Koordinatları
+const CITIES = [
+  { name: "İstanbul", lat: 41.01, lng: 28.98, pop: "16M", fault: true },
+  { name: "Ankara", lat: 39.93, lng: 32.86, pop: "5.8M", fault: false },
+  { name: "İzmir", lat: 38.42, lng: 27.14, pop: "4.4M", fault: true },
+  { name: "Bursa", lat: 40.19, lng: 29.06, pop: "3.1M", fault: true },
+  { name: "Antalya", lat: 36.89, lng: 30.71, pop: "2.6M", fault: false },
+  { name: "Adana", lat: 37.00, lng: 35.33, pop: "2.3M", fault: true },
+  { name: "Konya", lat: 37.87, lng: 32.49, pop: "2.2M", fault: false },
+  { name: "Gaziantep", lat: 37.06, lng: 37.38, pop: "2.1M", fault: true },
+  { name: "K.Maraş", lat: 37.58, lng: 36.93, pop: "1.1M", fault: true },
+  { name: "Hatay", lat: 36.20, lng: 36.16, pop: "1.6M", fault: true },
+  { name: "Kocaeli", lat: 40.76, lng: 29.92, pop: "2.0M", fault: true },
+  { name: "Samsun", lat: 41.29, lng: 36.33, pop: "1.3M", fault: false },
+  { name: "Diyarbakır", lat: 37.91, lng: 40.23, pop: "1.8M", fault: false },
+  { name: "Erzurum", lat: 39.90, lng: 41.27, pop: "750K", fault: true },
+  { name: "Van", lat: 38.50, lng: 43.38, pop: "1.1M", fault: true }
+];
+
+// Basit Türkiye Sınır Poligonu
+const TURKEY_BORDER = [
+  {lat: 41.7, lng: 26.5}, {lat: 42.1, lng: 28.0}, {lat: 41.4, lng: 31.8},
+  {lat: 42.0, lng: 35.1}, {lat: 41.4, lng: 41.5}, {lat: 41.1, lng: 43.1},
+  {lat: 39.7, lng: 44.8}, {lat: 37.1, lng: 44.3}, {lat: 37.3, lng: 42.3},
+  {lat: 36.8, lng: 38.5}, {lat: 36.6, lng: 36.7}, {lat: 35.8, lng: 35.9},
+  {lat: 36.1, lng: 33.5}, {lat: 36.2, lng: 30.0}, {lat: 36.7, lng: 27.5},
+  {lat: 38.5, lng: 26.3}, {lat: 40.0, lng: 26.1}, {lat: 40.6, lng: 26.9},
+  {lat: 41.7, lng: 26.5}
+];
+
+// Fay Hatları (KAF ve DAF)
+const FAULTS = [
+  // Kuzey Anadolu Fayı (Saros - Erzincan - Varto)
+  [{lat: 40.6, lng: 26.8}, {lat: 40.7, lng: 29.5}, {lat: 40.7, lng: 32.0}, {lat: 40.8, lng: 36.0}, {lat: 39.8, lng: 39.5}, {lat: 39.2, lng: 41.5}],
+  // Doğu Anadolu Fayı (Hatay - Maraş - Bingöl)
+  [{lat: 36.2, lng: 36.0}, {lat: 37.0, lng: 36.4}, {lat: 37.6, lng: 37.0}, {lat: 38.3, lng: 38.5}, {lat: 38.8, lng: 40.0}, {lat: 39.2, lng: 41.5}]
+];
+
+function resize() {
+  canvas.width = canvas.parentElement.clientWidth;
+  canvas.height = canvas.parentElement.clientHeight;
+  draw();
+}
+window.addEventListener("resize", resize);
+
+function latLngToXY(lat, lng) {
+  // Projeksiyon: Türkiye 35°E - 39°N merkezli
+  const centerLat = 39.0;
+  const centerLng = 35.2;
+  const xSpan = 18.0; // 26° to 45°
+  const ySpan = 7.0;  // 35° to 42°
+
+  const w = canvas.width;
+  const h = canvas.height;
+
+  const px = (w / 2) + ((lng - centerLng) / xSpan) * (w * 0.85) * scale + offsetX;
+  const py = (h / 2) - ((lat - centerLat) / ySpan) * (h * 0.85) * scale + offsetY;
+  return { x: px, y: py };
+}
+
+function xyToLatLng(x, y) {
+  const centerLat = 39.0;
+  const centerLng = 35.2;
+  const xSpan = 18.0;
+  const ySpan = 7.0;
+  const w = canvas.width;
+  const h = canvas.height;
+
+  const lng = centerLng + ((x - offsetX - w / 2) / (w * 0.85 * scale)) * xSpan;
+  const lat = centerLat - ((y - offsetY - h / 2) / (h * 0.85 * scale)) * ySpan;
+  return { lat, lng };
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Arka Plan Grid
+  ctx.strokeStyle = "#101927";
+  ctx.lineWidth = 1;
+  const step = 40;
+  for (let x = 0; x < canvas.width; x += step) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let y = 0; y < canvas.height; y += step) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+
+  // Türkiye Sınır Çizgisi
+  ctx.beginPath();
+  TURKEY_BORDER.forEach((pt, i) => {
+    const xy = latLngToXY(pt.lat, pt.lng);
+    if (i === 0) ctx.moveTo(xy.x, xy.y);
+    else ctx.lineTo(xy.x, xy.y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
+  ctx.fill();
+  ctx.strokeStyle = "#0284c7";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Fay Hatları (Kırmızı Çizgi)
+  FAULTS.forEach(fault => {
+    ctx.beginPath();
+    fault.forEach((pt, i) => {
+      const xy = latLngToXY(pt.lat, pt.lng);
+      if (i === 0) ctx.moveTo(xy.x, xy.y);
+      else ctx.lineTo(xy.x, xy.y);
+    });
+    ctx.strokeStyle = "rgba(225, 29, 72, 0.7)";
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Şehirler
+  CITIES.forEach(c => {
+    const xy = latLngToXY(c.lat, c.lng);
+    
+    // Şehir Noktası
+    ctx.beginPath();
+    ctx.arc(xy.x, xy.y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = c.fault ? "#e11d48" : "#38bdf8";
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Şehir İsmi
+    ctx.font = "bold 10.5px sans-serif";
+    ctx.fillStyle = "#f8fafc";
+    ctx.fillText(c.name, xy.x + 6, xy.y + 3);
+  });
+
+  // Ölçüm Noktaları
+  if (clickPoints.length) {
+    ctx.strokeStyle = "#f59e0b";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    clickPoints.forEach((p, i) => {
+      const xy = latLngToXY(p.lat, p.lng);
+      if (i === 0) ctx.moveTo(xy.x, xy.y);
+      else ctx.lineTo(xy.x, xy.y);
+
+      ctx.arc(xy.x, xy.y, 4, 0, Math.PI * 2);
+    });
+    ctx.stroke();
+  }
+}
+
+// Sürükleme ve Yakınlaştırma
+canvas.addEventListener("mousedown", e => {
+  isDragging = true;
+  startX = e.clientX - offsetX;
+  startY = e.clientY - offsetY;
+});
+window.addEventListener("mouseup", () => isDragging = false);
+canvas.addEventListener("mousemove", e => {
+  if (isDragging) {
+    offsetX = e.clientX - startX;
+    offsetY = e.clientY - startY;
+    draw();
+  }
+  const rect = canvas.getBoundingClientRect();
+  const c = xyToLatLng(e.clientX - rect.left, e.clientY - rect.top);
+  coordBar.textContent = `Enlem: ${c.lat.toFixed(4)}° N • Boylam: ${c.lng.toFixed(4)}° E • Yakınlaştırma: ${scale.toFixed(1)}x`;
+});
+
+canvas.addEventListener("click", e => {
+  const rect = canvas.getBoundingClientRect();
+  const c = xyToLatLng(e.clientX - rect.left, e.clientY - rect.top);
+  
+  clickPoints.push(c);
+  if (clickPoints.length > 2) clickPoints = [c];
+  
+  if (clickPoints.length === 2) {
+    const d = getDistKm(clickPoints[0].lat, clickPoints[0].lng, clickPoints[1].lat, clickPoints[1].lng);
+    measureResult.textContent = `Mesafe: ${d.toFixed(1)} km (Kuş uçuşu)`;
+  } else {
+    measureResult.textContent = `Nokta 1: [${c.lat.toFixed(2)}, ${c.lng.toFixed(2)}]`;
+  }
+  draw();
+});
+
+function getDistKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+function zoomIn() { scale *= 1.3; draw(); }
+function zoomOut() { scale = Math.max(0.6, scale / 1.3); draw(); }
+function resetView() { scale = 1.0; offsetX = 0; offsetY = 0; draw(); }
+
+function focusCoord(lat, lng, name) {
+  const centerLat = 39.0;
+  const centerLng = 35.2;
+  const xSpan = 18.0;
+  const ySpan = 7.0;
+  const w = canvas.width;
+  const h = canvas.height;
+
+  scale = 2.4;
+  offsetX = -((lng - centerLng) / xSpan) * (w * 0.85) * scale;
+  offsetY = ((lat - centerLat) / ySpan) * (h * 0.85) * scale;
+  measureResult.textContent = `Odak: ${name} [${lat}, ${lng}]`;
+  draw();
+}
+
+
+// Mobil Dokunmatik (Touch) Desteği
+canvas.addEventListener("touchstart", e => {
+  if (e.touches.length === 1) {
+    isDragging = true;
+    startX = e.touches[0].clientX - offsetX;
+    startY = e.touches[0].clientY - offsetY;
+  }
+}, { passive: true });
+
+canvas.addEventListener("touchmove", e => {
+  if (isDragging && e.touches.length === 1) {
+    offsetX = e.touches[0].clientX - startX;
+    offsetY = e.touches[0].clientY - startY;
+    draw();
+  }
+  const rect = canvas.getBoundingClientRect();
+  if (e.touches[0]) {
+    const c = xyToLatLng(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+    coordBar.textContent = `Enlem: ${c.lat.toFixed(4)}° N • Boylam: ${c.lng.toFixed(4)}° E • ${scale.toFixed(1)}x`;
+  }
+}, { passive: true });
+
+canvas.addEventListener("touchend", () => isDragging = false);
+
+resize();
+
+const currentTheme = localStorage.getItem('mfk_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+</script>
+</body>
+</html>

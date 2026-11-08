@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>mFk AcilNet - HazMat Tehlikeli Madde &amp; Kimyasal Kaza Rehberi</title>
+<style>
+  :root {
+    --bg-base: #090d16;
+    --card-bg: #0f172a;
+    --border: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --danger: #e11d48;
+    --radius: 6px;
+  }
+  [data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --card-bg: #ffffff;
+    --border: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-base);
+    padding-top: max(8px, env(safe-area-inset-top, 8px));
+    padding-bottom: max(30px, env(safe-area-inset-bottom, 30px));
+    padding-left: max(8px, env(safe-area-inset-left, 8px));
+    padding-right: max(8px, env(safe-area-inset-right, 8px));
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 10px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  .top-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+  }
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 11px;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .article-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .article-card h2 {
+    font-size: 15px;
+    color: #f87171;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  ul { padding-left: 20px; margin-bottom: 8px; }
+  li { margin-bottom: 5px; }
+  .warning-banner {
+    background: rgba(225,29,72,0.15);
+    border: 1px solid var(--danger);
+    color: #fca5a5;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 6px; }
+    .top-strip { flex-direction: column; align-items: stretch; gap: 4px; text-align: center; }
+    .btn-back { align-self: flex-start; }
+    .warning-banner { font-size: 11px; padding: 8px 10px; }
+    .article-card { padding: 10px 12px; margin-bottom: 8px; }
+    .article-card h2 { font-size: 13.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-strip">
+    <a href="index.html" class="btn-back">&larr; Geri</a>
+    <span style="font-weight:700; font-size:12px;">HazMat &bull; Tehlikeli Kimyasal &amp; Gaz Sızıntısı Müdahale Rehberi</span>
+    <span style="font-size:10px; color:var(--danger);">● Acil Eylem Yönergeleri</span>
+  </div>
+
+  <div class="warning-banner">
+    KİMYASAL VE GAZ SIZINTILARINDA İLK HAREKET TARZI: RÜZGARI ARKANIZA ALINIZ VE EN AZ 800 METRE UZAKLAŞINIZ! ÇUKUR ALANLARDA GAZ BİRİKİR; YÜKSEK NOKTALARA ÇIKINIZ.
+  </div>
+
+  <div class="article-card">
+    <h2>1. Klor Gazı (Cl2) ve Amonyak (NH3) Sızıntıları</h2>
+    <ul>
+      <li><b>Klor Gazı (Sarı-Yeşil, Keskin Kokulu):</b> Havadan ağırdır; zemin katlara, bodrumlara ve çukurlara çöker. Üst katlara çıkınız. Islak havlu veya karbonatlı ıslak bezle ağız ve burnunuzu kapatınız.</li>
+      <li><b>Amonyak Gazı (Renksiz, Keskin Boğucu):</b> Havadan hafiftir; yukarı yükselir. Alçak pozisyonda kalınız ve bol suyla gözlerinizi yıkayınız.</li>
+    </ul>
+  </div>
+
+  <div class="article-card">
+    <h2>2. Karbonmonoksit (CO) Sessiz Katil Zehirlenmesi</h2>
+    <ul>
+      <li><b>Kaynak:</b> Jeneratör egzozu, kömür sobası, kapalı alanda yakılan mangal veya LPG sızıntısı. Renksiz ve kokusuzdur.</li>
+      <li><b>Semptomlar:</b> Baş ağrısı, baş dönmesi, bulantı, uyuşukluk ve halsizlik.</li>
+      <li><b>Müdahale:</b> Jeneratörleri asla kapalı alanda veya pencere kenarında çalıştırmayınız! Kazazedeyi derhal açık havaya çıkarınız ve %100 oksijen veriniz.</li>
+    </ul>
+  </div>
+
+  <div class="article-card">
+    <h2>3. Yangın Sınıfları ve Söndürme Yöntemleri</h2>
+    <ul>
+      <li><b>A Sınıfı (Ahşap, Kağıt, Tekstil):</b> Su veya kuru kimyevi tozla söndürülür.</li>
+      <li><b>B Sınıfı (Benzin, Mazot, Tiner):</b> ASLA SU ATILMAZ! Su yangını yayar. Köpük, kuru kimyevi toz veya karbondioksit (CO2) ile boğulur.</li>
+      <li><b>C Sınıfı (Elektrik Panosu, Trafo, Piller):</b> ASLA SU ATILMAZ! Elektrik çarpar. CO2 gazlı veya kuru kimyevi tozlu tüp kullanılır.</li>
+    </ul>
+  </div>
+</div>
+<script>
+const currentTheme = localStorage.getItem('mfk_theme') || 'dark';
+document.documentElement.setAttribute('data-theme', currentTheme);
+</script>
+</body>
+</html>

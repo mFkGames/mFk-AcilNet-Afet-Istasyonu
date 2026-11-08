@@ -43,11 +43,16 @@ pct=$(df --output=pcent "$LIB" 2>/dev/null | tail -1 | tr -dc '0-9')
 # Raspberry Pi: get_throttled bit 0 şu an düşük voltaj, bit 16 açılıştan beri düşük voltaj oldu.
 # Raspberry Pi: get_throttled bit 0 = under-voltage now, bit 16 = under-voltage since boot.
 if command -v vcgencmd >/dev/null; then
-  t=$(( $(vcgencmd get_throttled | cut -d= -f2) ))
-  if (( t & 0x1 )); then
-    add "Pi şu anda düşük voltajla çalışıyor (güç kaynağı ya da pil yetersiz). Disk bozulabilir."
-  elif (( t & 0x10000 )); then
-    add "Açılıştan beri düşük voltaj yaşandı. Güç kaynağını ya da pili kontrol edin."
+  if raw_t=$(vcgencmd get_throttled 2>/dev/null) && [ -n "${raw_t#*=}" ]; then
+    t_hex="${raw_t#*=}"
+    if [[ "$t_hex" =~ ^0x[0-9a-fA-F]+$ ]] || [[ "$t_hex" =~ ^[0-9]+$ ]]; then
+      t=$(( t_hex ))
+      if (( t & 0x1 )); then
+        add "Pi şu anda düşük voltajla çalışıyor (güç kaynağı ya da pil yetersiz). Disk bozulabilir."
+      elif (( t & 0x10000 )); then
+        add "Açılıştan beri düşük voltaj yaşandı. Güç kaynağını ya da pili kontrol edin."
+      fi
+    fi
   fi
 fi
 

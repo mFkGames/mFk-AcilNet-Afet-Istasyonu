@@ -101,7 +101,7 @@ else
     case "$folder" in ''|\#*) continue;; esac
     found=("$ZIMS/${prefix}"_[0-9][0-9][0-9][0-9]-[0-9][0-9]*.zim)
     if [ ${#found[@]} -gt 0 ]; then present=$((present+1)); else missing+=("$prefix"); fi
-  done < "$CONF"
+  done < <(tr -d '\r' < "$CONF")
 
   info "$(du -sh "$ZIMS" 2>/dev/null | cut -f1) $ZIMS"
   if [ ${#missing[@]} -eq 0 ]; then

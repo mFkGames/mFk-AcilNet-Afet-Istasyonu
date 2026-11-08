@@ -1,0 +1,18 @@
+[Unit]
+Description=mFk AcilNet: Sesli Afet Telsizi Yayin Servisi
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+# Betik /usr/local/lib/has-voice altına kopyalanır (install-homepage.sh), çünkü ProtectHome /home'u gizler.
+PrivateTmp=yes
+ExecStart=/usr/bin/python3 /usr/local/lib/has-voice/voice-service.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
